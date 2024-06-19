@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react';
 import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems, Transition, TransitionChild } from '@headlessui/react';
-import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, DocumentDuplicateIcon, FolderIcon, HomeIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, CreditCardIcon, CurrencyDollarIcon, HomeIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Link, Route, Routes } from 'react-router-dom';
 import TableUser from '../components/TableUser';  // Importa el componente de Usuarios
@@ -9,8 +9,8 @@ import TableAccount from '../components/TableAccount';
 const navigation = [
   { name: 'Panel', href: '/dashboardadmin', icon: HomeIcon, current: false },
   { name: 'Usuarios', href: '/dashboardadmin/tableuser', icon: UsersIcon, current: false },
-  { name: 'Mis cuentas', href: '/dashboardadmin/tableaccount', icon: FolderIcon, current: false },
-  { name: 'Credito', href: '#', icon: DocumentDuplicateIcon, current: false }, 
+  { name: 'Mis cuentas', href: '/dashboardadmin/tableaccount', icon: CurrencyDollarIcon, current: false },
+  { name: 'Credito', href: '#', icon: CreditCardIcon, current: false }, 
   { name: 'Reportes', href: '#', icon: ChartPieIcon, current: false },
 ];
 
@@ -241,7 +241,7 @@ export default function DashboardAdmin() {
 
             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
               <form className="relative flex flex-1" action="#" method="GET">
-                <label htmlFor="search-field" className="sr-only">Search</label>
+                {/* <label htmlFor="search-field" className="sr-only">Search</label>
                 <MagnifyingGlassIcon className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400" aria-hidden="true" />
                 <input
                   id="search-field"
@@ -249,7 +249,7 @@ export default function DashboardAdmin() {
                   placeholder="Search..."
                   type="search"
                   name="search"
-                />
+                /> */}
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">

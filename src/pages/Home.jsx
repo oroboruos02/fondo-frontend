@@ -72,9 +72,9 @@ const tiers = [
 ]
 const faqs = [
   {
-    question: "What's the best thing about Switzerland?",
+    question: "¿Qué es un fondo de inversión?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "Un fondo de inversión es un vehículo de inversión colectiva que agrupa el dinero de varios inversores para invertir en una variedad de activos, como acciones, bonos, bienes raíces y otros instrumentos financieros.",
   },
   // More questions...
 ]
@@ -120,7 +120,7 @@ export default function Example() {
           <div className="flex lg:flex-1">
             <Link to="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <img className="h-8 w-auto" src="./fondo.png" alt="" />
+              <img className="h-10 w-auto" src="./fondo.png" alt="" />
             </Link>
           </div>
           <div className="flex lg:hidden">
@@ -506,7 +506,8 @@ export default function Example() {
         {/* FAQ section */}
         <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8">
           <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
-            <h2 className="text-2xl font-bold leading-10 tracking-tight text-gray-900">Frequently asked questions</h2>
+            <h2 className="text-2xl font-bold leading-10 tracking-tight text-gray-900">
+            Preguntas frecuentes</h2>
             <dl className="mt-10 space-y-6 divide-y divide-gray-900/10">
               {faqs.map((faq) => (
                 <Disclosure as="div" key={faq.question} className="pt-6">
@@ -605,6 +606,13 @@ export default function Example() {
           </div>
         </div>
       </footer>
+
+      {/* WhatsApp bottom */}
+      <div className="fixed bottom-3 right-4 z-10">
+          <a href="https://api.whatsapp.com/send?phone=+573013811981&text=Hola%21%20Quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer" className="block bg-green-500 p-4 rounded-full shadow-lg hover:bg-green-600 transition duration-300" aria-label="WhatsApp">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/598px-WhatsApp.svg.png" alt="WhatsApp Icon" className="h-6 w-6 text-white" />
+          </a>
+      </div>
     </div>
   )
 }
