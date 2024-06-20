@@ -41,15 +41,15 @@ const DatesDashboard = () => {
           <div className="flex flex-col space-y-4">
             <div className="flex justify-between">
               <span className="font-medium">Total Invertido:</span>
-              <span>$120,000</span>
+              <span>$130,000,000</span>
             </div>
             <div className="flex justify-between">
               <span className="font-medium">Total de Inversionistas:</span>
-              <span>45</span>
+              <span>50</span>
             </div>
             <div className="flex justify-between">
               <span className="font-medium">Fondos Activos:</span>
-              <span>5</span>
+              <span>$80,000,000</span>
             </div>
           </div>
         </div>

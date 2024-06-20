@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const TableClientes = () => {
+  const { register, handleSubmit, reset, setValue } = useForm();
   const [searchTerm, setSearchTerm] = useState('');
   const [clientes, setClientes] = useState([
-    { nombre: 'Carlos', apellidos: 'Lopez', telefono: '123456789', correo: 'carloslopez@gmail.com', direccion: 'Calle Falsa 123' },
-    { nombre: 'Maria', apellidos: 'Rodriguez', telefono: '987654321', correo: 'mariarodriguez@gmail.com', direccion: 'Av. Siempre Viva 456' },
+    { cedula: '1234567890', nombre: 'Carlos', apellidos: 'Lopez', telefono: '123456789', correo: 'carloslopez@gmail.com', direccion: 'Calle Falsa 123' },
+    { cedula: '0987654321', nombre: 'Maria', apellidos: 'Rodriguez', telefono: '987654321', correo: 'mariarodriguez@gmail.com', direccion: 'Av. Siempre Viva 456' },
   ]);
-
-  const [newCliente, setNewCliente] = useState({
-    nombre: '',
-    apellidos: '',
-    telefono: '',
-    correo: '',
-    direccion: '',
-  });
 
   const [editingCliente, setEditingCliente] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -26,65 +20,50 @@ const TableClientes = () => {
     (cliente) =>
       cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cliente.apellidos.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente.telefono.includes(searchTerm)
+      cliente.telefono.includes(searchTerm) ||
+      cliente.cedula.includes(searchTerm)
   );
 
-  const handleCreateCliente = () => {
-    if (newCliente.nombre.trim() === '' || newCliente.apellidos.trim() === '' || newCliente.telefono.trim() === '' || newCliente.correo.trim() === '' || newCliente.direccion.trim() === '') {
-      alert('Por favor completa todos los campos.');
-      return;
-    }
-
-    setClientes([...clientes, newCliente]);
-    setNewCliente({
-      nombre: '',
-      apellidos: '',
-      telefono: '',
-      correo: '',
-      direccion: '',
-    });
+  const handleCreateCliente = (data) => {
+    setClientes([...clientes, data]);
+    reset();
     setIsFormVisible(false);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewCliente((prevCliente) => ({
-      ...prevCliente,
-      [name]: value,
-    }));
+  const handleUpdateCliente = (data) => {
+    const updatedClientes = clientes.map((cliente, index) => (index === editingCliente ? data : cliente));
+    setClientes(updatedClientes);
+    reset();
+    setEditingCliente(null);
+    setIsFormVisible(false);
+  };
+
+  const handleEditCliente = (index) => {
+    const clienteToEdit = clientes[index];
+    setValue('cedula', clienteToEdit.cedula);
+    setValue('nombre', clienteToEdit.nombre);
+    setValue('apellidos', clienteToEdit.apellidos);
+    setValue('telefono', clienteToEdit.telefono);
+    setValue('correo', clienteToEdit.correo);
+    setValue('direccion', clienteToEdit.direccion);
+    setEditingCliente(index);
+    setIsFormVisible(true);
   };
 
   const handleDeleteCliente = (index) => {
     setClientes(clientes.filter((_, i) => i !== index));
   };
 
-  const handleEditCliente = (index) => {
-    setEditingCliente(index);
-    setNewCliente(clientes[index]);
-    setIsFormVisible(true);
-  };
-
-  const handleUpdateCliente = () => {
-    if (newCliente.nombre.trim() === '' || newCliente.apellidos.trim() === '' || newCliente.telefono.trim() === '' || newCliente.correo.trim() === '' || newCliente.direccion.trim() === '') {
-      alert('Por favor completa todos los campos.');
-      return;
-    }
-
-    const updatedClientes = clientes.map((cliente, index) => (index === editingCliente ? newCliente : cliente));
-    setClientes(updatedClientes);
-    setNewCliente({
-      nombre: '',
-      apellidos: '',
-      telefono: '',
-      correo: '',
-      direccion: '',
-    });
-    setEditingCliente(null);
-    setIsFormVisible(false);
-  };
-
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
+  };
+
+  const onSubmit = (data) => {
+    if (editingCliente !== null) {
+      handleUpdateCliente(data);
+    } else {
+      handleCreateCliente(data);
+    }
   };
 
   return (
@@ -95,7 +74,7 @@ const TableClientes = () => {
         </button>
         <input
           type="text"
-          placeholder="Buscar por nombre, apellidos o teléfono"
+          placeholder="Buscar por nombre, apellidos, teléfono o cédula"
           value={searchTerm}
           onChange={handleSearch}
           className="border border-gray-300 p-2 rounded"
@@ -105,6 +84,7 @@ const TableClientes = () => {
         <table className="min-w-full bg-white">
           <thead>
             <tr>
+              <th className="px-4 py-2 border">Cédula</th>
               <th className="px-4 py-2 border">Nombre</th>
               <th className="px-4 py-2 border">Apellidos</th>
               <th className="px-4 py-2 border">Teléfono</th>
@@ -116,6 +96,7 @@ const TableClientes = () => {
           <tbody>
             {filteredClientes.map((cliente, index) => (
               <tr key={index}>
+                <td className="border px-4 py-2">{cliente.cedula}</td>
                 <td className="border px-4 py-2">{cliente.nombre}</td>
                 <td className="border px-4 py-2">{cliente.apellidos}</td>
                 <td className="border px-4 py-2">{cliente.telefono}</td>
@@ -137,9 +118,21 @@ const TableClientes = () => {
       {isFormVisible && (
         <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2">{editingCliente !== null ? 'Editar Cliente' : 'Agregar Nuevo Cliente'}</h2>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
+                <label htmlFor="cedula" className="block text-sm font-medium text-gray-700">
+                  Cédula
+                </label>
+                <input
+                  type="text"
+                  id="cedula"
+                  name="cedula"
+                  {...register('cedula', { required: true })}
+                  className="border border-gray-300 p-2 rounded w-full"
+                />
+              </div>
+              <div className="w-1/2 pl-2">
                 <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
                   Nombre
                 </label>
@@ -147,12 +140,13 @@ const TableClientes = () => {
                   type="text"
                   id="nombre"
                   name="nombre"
-                  value={newCliente.nombre}
-                  onChange={handleChange}
+                  {...register('nombre', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
-              <div className="w-1/2 pl-2">
+            </div>
+            <div className="flex mb-4">
+              <div className="w-1/2 pr-2">
                 <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700">
                   Apellidos
                 </label>
@@ -160,14 +154,11 @@ const TableClientes = () => {
                   type="text"
                   id="apellidos"
                   name="apellidos"
-                  value={newCliente.apellidos}
-                  onChange={handleChange}
+                  {...register('apellidos', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
-            </div>
-            <div className="flex mb-4">
-              <div className="w-1/2 pr-2">
+              <div className="w-1/2 pl-2">
                 <label htmlFor="telefono" className="block text-sm font-medium text-gray-700">
                   Teléfono
                 </label>
@@ -175,12 +166,13 @@ const TableClientes = () => {
                   type="text"
                   id="telefono"
                   name="telefono"
-                  value={newCliente.telefono}
-                  onChange={handleChange}
+                  {...register('telefono', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
-              <div className="w-1/2 pl-2">
+            </div>
+            <div className="flex mb-4">
+              <div className="w-1/2 pr-2">
                 <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
                   Correo
                 </label>
@@ -188,14 +180,11 @@ const TableClientes = () => {
                   type="email"
                   id="correo"
                   name="correo"
-                  value={newCliente.correo}
-                  onChange={handleChange}
+                  {...register('correo', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
-            </div>
-            <div className="flex mb-4">
-              <div className="w-full">
+              <div className="w-1/2 pl-2">
                 <label htmlFor="direccion" className="block text-sm font-medium text-gray-700">
                   Dirección
                 </label>
@@ -203,15 +192,13 @@ const TableClientes = () => {
                   type="text"
                   id="direccion"
                   name="direccion"
-                  value={newCliente.direccion}
-                  onChange={handleChange}
+                  {...register('direccion', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
             </div>
             <button
-              type="button"
-              onClick={editingCliente !== null ? handleUpdateCliente : handleCreateCliente}
+              type="submit"
               className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
             >
               {editingCliente !== null ? 'Actualizar cliente' : 'Crear'}

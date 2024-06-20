@@ -10,10 +10,10 @@ import DatesDashboard from '../components/DatesDashboard';
 import { useAuthUser } from '../context/AuthUserContext';
 
 const navigation = [
-  { name: 'Panel principal', href: '/dashboard-admin/dates-dashboard', icon: HomeIcon, current: false },
+  { name: 'Panel principal', href: '/dashboard-admin/dates-dashboard', icon: HomeIcon, current: true },
   { name: 'Administrador', href: '/dashboard-admin/table-admin', icon: ShieldCheckIcon, current: false },
   { name: 'Clientes', href: '/dashboard-admin/table-client', icon: UsersIcon, current: false },
-  { name: 'Cuentas generales', href: '/dashboard-admin/table-account', icon: CurrencyDollarIcon, current: false },
+  { name: 'Cuentas', href: '/dashboard-admin/table-account', icon: CurrencyDollarIcon, current: false },
   { name: 'Credito', href: '#', icon: CreditCardIcon, current: false }, 
   { name: 'Reportes', href: '#', icon: ChartPieIcon, current: false },
 ];

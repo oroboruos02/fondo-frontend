@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const TableAccount = () => {
+  const { register, handleSubmit, reset, setValue } = useForm();
   const [searchTerm, setSearchTerm] = useState('');
   const [accounts, setAccounts] = useState([
     { numeroCuenta: '123456', propietarioCc: '100200300', nombre: 'Juan', apellidos: 'Perez' },
     { numeroCuenta: '654321', propietarioCc: '400500600', nombre: 'Ana', apellidos: 'Gomez' },
   ]);
-
-  const [newAccount, setNewAccount] = useState({
-    numeroCuenta: '',
-    propietarioCc: '',
-    nombre: '',
-    apellidos: '',
-  });
-
+  
   const [editingAccount, setEditingAccount] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -29,60 +24,44 @@ const TableAccount = () => {
       account.apellidos.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleCreateAccount = () => {
-    if (newAccount.numeroCuenta.trim() === '' || newAccount.propietarioCc.trim() === '' || newAccount.nombre.trim() === '' || newAccount.apellidos.trim() === '') {
-      alert('Por favor completa todos los campos.');
-      return;
-    }
-
-    setAccounts([...accounts, newAccount]);
-    setNewAccount({
-      numeroCuenta: '',
-      propietarioCc: '',
-      nombre: '',
-      apellidos: '',
-    });
+  const handleCreateAccount = (data) => {
+    setAccounts([...accounts, data]);
+    reset();
     setIsFormVisible(false);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewAccount((prevAccount) => ({
-      ...prevAccount,
-      [name]: value,
-    }));
+  const handleUpdateAccount = (data) => {
+    const updatedAccounts = accounts.map((account, index) => (index === editingAccount ? data : account));
+    setAccounts(updatedAccounts);
+    reset();
+    setEditingAccount(null);
+    setIsFormVisible(false);
+  };
+
+  const handleEditAccount = (index) => {
+    const accountToEdit = accounts[index];
+    setValue('numeroCuenta', accountToEdit.numeroCuenta);
+    setValue('propietarioCc', accountToEdit.propietarioCc);
+    setValue('nombre', accountToEdit.nombre);
+    setValue('apellidos', accountToEdit.apellidos);
+    setEditingAccount(index);
+    setIsFormVisible(true);
   };
 
   const handleDeleteAccount = (index) => {
     setAccounts(accounts.filter((_, i) => i !== index));
   };
 
-  const handleEditAccount = (index) => {
-    setEditingAccount(index);
-    setNewAccount(accounts[index]);
-    setIsFormVisible(true);
-  };
-
-  const handleUpdateAccount = () => {
-    if (newAccount.numeroCuenta.trim() === '' || newAccount.propietarioCc.trim() === '' || newAccount.nombre.trim() === '' || newAccount.apellidos.trim() === '') {
-      alert('Por favor completa todos los campos.');
-      return;
-    }
-
-    const updatedAccounts = accounts.map((account, index) => (index === editingAccount ? newAccount : account));
-    setAccounts(updatedAccounts);
-    setNewAccount({
-      numeroCuenta: '',
-      propietarioCc: '',
-      nombre: '',
-      apellidos: '',
-    });
-    setEditingAccount(null);
-    setIsFormVisible(false);
-  };
-
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
+  };
+
+  const onSubmit = (data) => {
+    if (editingAccount !== null) {
+      handleUpdateAccount(data);
+    } else {
+      handleCreateAccount(data);
+    }
   };
 
   return (
@@ -133,7 +112,7 @@ const TableAccount = () => {
       {isFormVisible && (
         <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2">{editingAccount !== null ? 'Editar Cuenta' : 'Agregar Nueva Cuenta'}</h2>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
                 <label htmlFor="numeroCuenta" className="block text-sm font-medium text-gray-700">
@@ -143,8 +122,7 @@ const TableAccount = () => {
                   type="text"
                   id="numeroCuenta"
                   name="numeroCuenta"
-                  value={newAccount.numeroCuenta}
-                  onChange={handleChange}
+                  {...register('numeroCuenta', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
@@ -156,8 +134,7 @@ const TableAccount = () => {
                   type="text"
                   id="propietarioCc"
                   name="propietarioCc"
-                  value={newAccount.propietarioCc}
-                  onChange={handleChange}
+                  {...register('propietarioCc', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
@@ -171,8 +148,7 @@ const TableAccount = () => {
                   type="text"
                   id="nombre"
                   name="nombre"
-                  value={newAccount.nombre}
-                  onChange={handleChange}
+                  {...register('nombre', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
@@ -184,15 +160,13 @@ const TableAccount = () => {
                   type="text"
                   id="apellidos"
                   name="apellidos"
-                  value={newAccount.apellidos}
-                  onChange={handleChange}
+                  {...register('apellidos', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
             </div>
             <button
-              type="button"
-              onClick={editingAccount !== null ? handleUpdateAccount : handleCreateAccount}
+              type="submit"
               className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
             >
               {editingAccount !== null ? 'Actualizar cuenta' : 'Crear cuenta'}

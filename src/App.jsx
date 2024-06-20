@@ -32,6 +32,7 @@ function App() {
             <Route element={ <ProtectedRoutesUser /> }>
               <Route path="/dashboard-admin/*" element={<DashboardAdmin />} />
             </Route>
+            
             <Route path="/dashboard-client" element={<DashboardClient />} />
             <Route path="/form-credit" element={<FormCredit />} />
             <Route path="/dates-dashboard/*" element={<DatesDashboard />} />

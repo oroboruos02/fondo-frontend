@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const TableAdmin = () => {
+  const { register, handleSubmit, reset, setValue } = useForm();
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState([
     { nombre: 'Juan', apellidos: 'Perez', telefono: '123456789', correo: 'juanperez@gmail.com', contrasena: 'password1' },
     { nombre: 'Ana', apellidos: 'Gomez', telefono: '987654321', correo: 'anagomez@gmail.com', contrasena: 'password2' },
   ]);
-
-  const [newUser, setNewUser] = useState({
-    nombre: '',
-    apellidos: '',
-    telefono: '',
-    correo: '',
-    contrasena: '',
-  });
 
   const [editingUser, setEditingUser] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -29,62 +23,45 @@ const TableAdmin = () => {
       user.telefono.includes(searchTerm)
   );
 
-  const handleCreateUser = () => {
-    if (newUser.nombre.trim() === '' || newUser.apellidos.trim() === '' || newUser.telefono.trim() === '' || newUser.correo.trim() === '' || newUser.contrasena.trim() === '') {
-      alert('Por favor completa todos los campos.');
-      return;
-    }
-
-    setUsers([...users, newUser]);
-    setNewUser({
-      nombre: '',
-      apellidos: '',
-      telefono: '',
-      correo: '',
-      contrasena: '',
-    });
+  const handleCreateUser = (data) => {
+    setUsers([...users, data]);
+    reset();
     setIsFormVisible(false);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
+  const handleUpdateUser = (data) => {
+    const updatedUsers = users.map((user, index) => (index === editingUser ? data : user));
+    setUsers(updatedUsers);
+    reset();
+    setEditingUser(null);
+    setIsFormVisible(false);
+  };
+
+  const handleEditUser = (index) => {
+    const userToEdit = users[index];
+    setValue('nombre', userToEdit.nombre);
+    setValue('apellidos', userToEdit.apellidos);
+    setValue('telefono', userToEdit.telefono);
+    setValue('correo', userToEdit.correo);
+    setValue('contrasena', userToEdit.contrasena);
+    setEditingUser(index);
+    setIsFormVisible(true);
   };
 
   const handleDeleteUser = (index) => {
     setUsers(users.filter((_, i) => i !== index));
   };
 
-  const handleEditUser = (index) => {
-    setEditingUser(index);
-    setNewUser(users[index]);
-    setIsFormVisible(true);
-  };
-
-  const handleUpdateUser = () => {
-    if (newUser.nombre.trim() === '' || newUser.apellidos.trim() === '' || newUser.telefono.trim() === '' || newUser.correo.trim() === '' || newUser.contrasena.trim() === '') {
-      alert('Por favor completa todos los campos.');
-      return;
-    }
-
-    const updatedUsers = users.map((user, index) => (index === editingUser ? newUser : user));
-    setUsers(updatedUsers);
-    setNewUser({
-      nombre: '',
-      apellidos: '',
-      telefono: '',
-      correo: '',
-      contrasena: '',
-    });
-    setEditingUser(null);
-    setIsFormVisible(false);
-  };
-
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
+  };
+
+  const onSubmit = (data) => {
+    if (editingUser !== null) {
+      handleUpdateUser(data);
+    } else {
+      handleCreateUser(data);
+    }
   };
 
   return (
@@ -137,7 +114,7 @@ const TableAdmin = () => {
       {isFormVisible && (
         <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2">{editingUser !== null ? 'Editar Usuario' : 'Agregar Nuevo Administrador'}</h2>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
                 <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
@@ -147,8 +124,7 @@ const TableAdmin = () => {
                   type="text"
                   id="nombre"
                   name="nombre"
-                  value={newUser.nombre}
-                  onChange={handleChange}
+                  {...register('nombre', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
@@ -160,8 +136,7 @@ const TableAdmin = () => {
                   type="text"
                   id="apellidos"
                   name="apellidos"
-                  value={newUser.apellidos}
-                  onChange={handleChange}
+                  {...register('apellidos', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
@@ -175,8 +150,7 @@ const TableAdmin = () => {
                   type="text"
                   id="telefono"
                   name="telefono"
-                  value={newUser.telefono}
-                  onChange={handleChange}
+                  {...register('telefono', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
@@ -188,8 +162,7 @@ const TableAdmin = () => {
                   type="email"
                   id="correo"
                   name="correo"
-                  value={newUser.correo}
-                  onChange={handleChange}
+                  {...register('correo', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
@@ -203,15 +176,13 @@ const TableAdmin = () => {
                   type="password"
                   id="contrasena"
                   name="contrasena"
-                  value={newUser.contrasena}
-                  onChange={handleChange}
+                  {...register('contrasena', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
             </div>
             <button
-              type="button"
-              onClick={editingUser !== null ? handleUpdateUser : handleCreateUser}
+              type="submit"
               className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
             >
               {editingUser !== null ? 'Actualizar administrador' : 'Crear'}
