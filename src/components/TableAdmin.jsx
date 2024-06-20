@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const TableUser = () => {
+const TableAdmin = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState([
     { nombre: 'Juan', apellidos: 'Perez', telefono: '123456789', correo: 'juanperez@gmail.com', contrasena: 'password1' },
@@ -91,7 +91,7 @@ const TableUser = () => {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded">
-          {isFormVisible ? 'Cancelar' : 'Crear usuario'}
+          {isFormVisible ? 'Cancelar' : 'Crear administrador'}
         </button>
         <input
           type="text"
@@ -136,7 +136,7 @@ const TableUser = () => {
       </div>
       {isFormVisible && (
         <div className="mt-4">
-          <h2 className="text-lg font-semibold mb-2">{editingUser !== null ? 'Editar Usuario' : 'Agregar Nuevo Usuario'}</h2>
+          <h2 className="text-lg font-semibold mb-2">{editingUser !== null ? 'Editar Usuario' : 'Agregar Nuevo Administrador'}</h2>
           <form>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
@@ -214,7 +214,7 @@ const TableUser = () => {
               onClick={editingUser !== null ? handleUpdateUser : handleCreateUser}
               className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
             >
-              {editingUser !== null ? 'Actualizar Usuario' : 'Crear Usuario'}
+              {editingUser !== null ? 'Actualizar administrador' : 'Crear'}
             </button>
           </form>
         </div>
@@ -223,4 +223,4 @@ const TableUser = () => {
   );
 };
 
-export default TableUser;
+export default TableAdmin;

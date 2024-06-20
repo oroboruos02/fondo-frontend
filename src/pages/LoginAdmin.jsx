@@ -1,25 +1,24 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // src/components/LoginForm.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form'
+import { useAuthUser } from '../context/AuthUserContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginUser() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+  
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { signin, errors: siginErrors, isAuthenticated } = useAuthUser();
+
+  const navigate = useNavigate();
+
+  const onSubmit = handleSubmit(data => {
+    signin(data);
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
-  };
+  useEffect(() => {
+    if(isAuthenticated) navigate('/dashboard-admin')
+  }, [isAuthenticated])
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -34,7 +33,12 @@ export default function LoginUser() {
             Inicia sesión en tu cuenta
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        {
+          siginErrors.map((error, i) => (
+            <p className='text-red-500' key={i}>{error}</p>
+          ))
+        }
+        <form onSubmit={ onSubmit } className="mt-8 space-y-6">
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -44,12 +48,11 @@ export default function LoginUser() {
                 id="email"
                 name="email"
                 type="email"
-                required
+                {...register("email", { required: true })}
                 className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Correo electrónico"
-                value={formData.email}
-                onChange={handleChange}
+                placeholder="Ingrese su correo electrónico"
               />
+              {errors.email && <p className='text-red-500'>El correo electrónico es requerido</p>}
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
@@ -59,12 +62,11 @@ export default function LoginUser() {
                 id="password"
                 name="password"
                 type="password"
-                required
+                {...register("password", { required: true })}
                 className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Contraseña"
-                value={formData.password}
-                onChange={handleChange}
+                placeholder="Ingrese su contraseña"
               />
+              {errors.password && <p className='text-red-500'>La contraseña es requerida</p>}
             </div>
           </div>
 

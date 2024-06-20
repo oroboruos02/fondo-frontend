@@ -8,29 +8,40 @@ import RegisterClient from './pages/RegisterClient';
 import LoginClient from './pages/LoginClient';
 import DashboardAdmin from './pages/DashboardAdmin';
 import DashboardClient from './pages/DashboardClient';
+import DatesDashboard from './components/DatesDashboard';
 import FormCredit from './pages/FormCredit';
-import TableUser from './components/TableUser';
+import TableAdmin from './components/TableAdmin';
+import TableClient from './components/TableClient';
 import TableAccount from './components/TableAccount';
 import './App.css';
+import { AuthUserProvider } from './context/AuthUserContext';
+import ProtectedRoutesUser from './ProtectedRoutesUser';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/registeradmin" element={<RegisterAdmin />} />
-          <Route path="/loginadmin" element={<LoginAdmin />} />
-          <Route path="/registerclient" element={<RegisterClient />} />
-          <Route path="/loginclient" element={<LoginClient />} />
-          <Route path="/dashboardadmin/*" element={<DashboardAdmin />} />
-          <Route path="/dashboardclient" element={<DashboardClient />} />
-          <Route path="/formcredit" element={<FormCredit />} />
-          <Route path="/tableuser/*" element={<TableUser />} />
-          <Route path='/tableaccount/*' element={<TableAccount />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthUserProvider>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register-admin" element={<RegisterAdmin />} />
+            <Route path="/login-admin" element={<LoginAdmin />} />
+            <Route path="/register-client" element={<RegisterClient />} />
+            <Route path="/login-client" element={<LoginClient />} />
+
+            <Route element={ <ProtectedRoutesUser /> }>
+              <Route path="/dashboard-admin/*" element={<DashboardAdmin />} />
+            </Route>
+            <Route path="/dashboard-client" element={<DashboardClient />} />
+            <Route path="/form-credit" element={<FormCredit />} />
+            <Route path="/dates-dashboard/*" element={<DatesDashboard />} />
+            <Route path="/table-admin/*" element={<TableAdmin />} />
+            <Route path="/table-client/*" element={<TableClient />} />
+            <Route path='/table-account/*' element={<TableAccount />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthUserProvider>
   );
 }
 

@@ -1,15 +1,19 @@
 import { Fragment, useState } from 'react';
 import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems, Transition, TransitionChild } from '@headlessui/react';
-import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, CreditCardIcon, CurrencyDollarIcon, HomeIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, CreditCardIcon, CurrencyDollarIcon, HomeIcon, UsersIcon, XMarkIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Link, Route, Routes } from 'react-router-dom';
-import TableUser from '../components/TableUser';  // Importa el componente de Usuarios
+import TableAdmin from '../components/TableAdmin'; 
+import TableClient from '../components/TableClient'; 
 import TableAccount from '../components/TableAccount';
+import DatesDashboard from '../components/DatesDashboard';
+import { useAuthUser } from '../context/AuthUserContext';
 
 const navigation = [
-  { name: 'Panel', href: '/dashboardadmin', icon: HomeIcon, current: false },
-  { name: 'Usuarios', href: '/dashboardadmin/tableuser', icon: UsersIcon, current: false },
-  { name: 'Mis cuentas', href: '/dashboardadmin/tableaccount', icon: CurrencyDollarIcon, current: false },
+  { name: 'Panel principal', href: '/dashboard-admin/dates-dashboard', icon: HomeIcon, current: false },
+  { name: 'Administrador', href: '/dashboard-admin/table-admin', icon: ShieldCheckIcon, current: false },
+  { name: 'Clientes', href: '/dashboard-admin/table-client', icon: UsersIcon, current: false },
+  { name: 'Cuentas generales', href: '/dashboard-admin/table-account', icon: CurrencyDollarIcon, current: false },
   { name: 'Credito', href: '#', icon: CreditCardIcon, current: false }, 
   { name: 'Reportes', href: '#', icon: ChartPieIcon, current: false },
 ];
@@ -18,7 +22,7 @@ const teams = [];
 
 const userNavigation = [
   { name: 'Your profile', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Sign out', href: '/login-admin'},
 ];
 
 function classNames(...classes) {
@@ -27,6 +31,8 @@ function classNames(...classes) {
 
 export default function DashboardAdmin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const { logout, user } = useAuthUser();
 
   return (
     <>
@@ -268,24 +274,28 @@ export default function DashboardAdmin() {
                       alt=""
                     />
                     <span className="hidden lg:flex lg:items-center">
-                      <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">Ana Gomez</span>
+                      <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">{user.name} {user.lastname}</span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>
                   </MenuButton>
                   <Transition>
                     <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {userNavigation.map((item) => (
+                      {/* {userNavigation.map((item) => (
                         <MenuItem key={item.name}>
                           {({ active }) => (
-                            <a
-                              href={item.href}
+                            <Link
+                              to={item.href}
                               className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           )}
+                          
                         </MenuItem>
-                      ))}
+                        
+                      ))} */}
+                      <Link className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100')}>Perfil</Link>
+                      <Link to='/login-admin' onClick={() => {logout()}} className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100')}>Cerrar sesión</Link>
                     </MenuItems>
                   </Transition>
                 </Menu>
@@ -295,9 +305,10 @@ export default function DashboardAdmin() {
 
           <main className="p-6">
             <Routes>
-              <Route path="/" element={<div>Aqui muestra apartados cuentas o datos generales para Administrador</div>} />
-              <Route path="tableuser" element={<TableUser />} />
-              <Route path='tableaccount' element={<TableAccount />} />
+              <Route path="dates-dashboard" element={<DatesDashboard />} />
+              <Route path="table-admin" element={<TableAdmin />} />
+              <Route path="table-client" element={<TableClient />} />
+              <Route path='table-account' element={<TableAccount />} />
             </Routes>
           </main>
         </div>
