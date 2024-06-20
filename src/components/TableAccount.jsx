@@ -5,10 +5,10 @@ const TableAccount = () => {
   const { register, handleSubmit, reset, setValue } = useForm();
   const [searchTerm, setSearchTerm] = useState('');
   const [accounts, setAccounts] = useState([
-    { numeroCuenta: '123456', propietarioCc: '100200300', nombre: 'Juan', apellidos: 'Perez' },
-    { numeroCuenta: '654321', propietarioCc: '400500600', nombre: 'Ana', apellidos: 'Gomez' },
+    { id: '1', fechaApertura: '2023-01-01', cuotas: 12, inversionInicial: 1000, pagos: 100 },
+    { id: '2', fechaApertura: '2023-02-01', cuotas: 24, inversionInicial: 2000, pagos: 200 },
   ]);
-  
+
   const [editingAccount, setEditingAccount] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -18,10 +18,10 @@ const TableAccount = () => {
 
   const filteredAccounts = accounts.filter(
     (account) =>
-      account.numeroCuenta.includes(searchTerm) ||
-      account.propietarioCc.includes(searchTerm) ||
-      account.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      account.apellidos.toLowerCase().includes(searchTerm.toLowerCase())
+      account.fechaApertura.includes(searchTerm) ||
+      account.cuotas.toString().includes(searchTerm) ||
+      account.inversionInicial.toString().includes(searchTerm) ||
+      account.pagos.toString().includes(searchTerm)
   );
 
   const handleCreateAccount = (data) => {
@@ -40,10 +40,11 @@ const TableAccount = () => {
 
   const handleEditAccount = (index) => {
     const accountToEdit = accounts[index];
-    setValue('numeroCuenta', accountToEdit.numeroCuenta);
-    setValue('propietarioCc', accountToEdit.propietarioCc);
-    setValue('nombre', accountToEdit.nombre);
-    setValue('apellidos', accountToEdit.apellidos);
+    setValue('id', accountToEdit.id);
+    setValue('fechaApertura', accountToEdit.fechaApertura);
+    setValue('cuotas', accountToEdit.cuotas);
+    setValue('inversionInicial', accountToEdit.inversionInicial);
+    setValue('pagos', accountToEdit.pagos);
     setEditingAccount(index);
     setIsFormVisible(true);
   };
@@ -72,7 +73,7 @@ const TableAccount = () => {
         </button>
         <input
           type="text"
-          placeholder="Buscar por número de cuenta, CC, nombre o apellidos"
+          placeholder="Buscar por fecha de apertura, cuotas, inversión inicial o pagos"
           value={searchTerm}
           onChange={handleSearch}
           className="border border-gray-300 p-2 rounded"
@@ -82,20 +83,20 @@ const TableAccount = () => {
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="px-4 py-2 border">Número de Cuenta</th>
-              <th className="px-4 py-2 border">Propietario CC</th>
-              <th className="px-4 py-2 border">Nombre</th>
-              <th className="px-4 py-2 border">Apellidos</th>
+              <th className="px-4 py-2 border">Fecha de Apertura</th>
+              <th className="px-4 py-2 border">Cuotas</th>
+              <th className="px-4 py-2 border">Inversión Inicial</th>
+              <th className="px-4 py-2 border">Pagos</th>
               <th className="px-4 py-2 border">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {filteredAccounts.map((account, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{account.numeroCuenta}</td>
-                <td className="border px-4 py-2">{account.propietarioCc}</td>
-                <td className="border px-4 py-2">{account.nombre}</td>
-                <td className="border px-4 py-2">{account.apellidos}</td>
+                <td className="border px-4 py-2">{account.fechaApertura}</td>
+                <td className="border px-4 py-2">{account.cuotas}</td>
+                <td className="border px-4 py-2">{account.inversionInicial}</td>
+                <td className="border px-4 py-2">{account.pagos}</td>
                 <td className="border px-4 py-2">
                   <button onClick={() => handleEditAccount(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
                     Editar
@@ -113,57 +114,70 @@ const TableAccount = () => {
         <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2">{editingAccount !== null ? 'Editar Cuenta' : 'Agregar Nueva Cuenta'}</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex mb-4">
-              <div className="w-1/2 pr-2">
-                <label htmlFor="numeroCuenta" className="block text-sm font-medium text-gray-700">
-                  Número de Cuenta
-                </label>
-                <input
-                  type="text"
-                  id="numeroCuenta"
-                  name="numeroCuenta"
-                  {...register('numeroCuenta', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
-                />
-              </div>
-              <div className="w-1/2 pl-2">
-                <label htmlFor="propietarioCc" className="block text-sm font-medium text-gray-700">
-                  Propietario CC
-                </label>
-                <input
-                  type="text"
-                  id="propietarioCc"
-                  name="propietarioCc"
-                  {...register('propietarioCc', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
-                />
-              </div>
+            <div className="mb-4">
+              <label htmlFor="id" className="block text-sm font-medium text-gray-700">
+                ID
+              </label>
+              <select
+                id="id"
+                name="id"
+                {...register('id', { required: true })}
+                className="border border-gray-300 p-2 rounded w-full"
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                {/* Agrega más opciones según sea necesario */}
+              </select>
             </div>
-            <div className="flex mb-4">
-              <div className="w-1/2 pr-2">
-                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  {...register('nombre', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
-                />
-              </div>
-              <div className="w-1/2 pl-2">
-                <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700">
-                  Apellidos
-                </label>
-                <input
-                  type="text"
-                  id="apellidos"
-                  name="apellidos"
-                  {...register('apellidos', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
-                />
-              </div>
+            <div className="mb-4">
+              <label htmlFor="numeroCupos" className="block text-sm font-medium text-gray-700">
+                Número de Cupos
+              </label>
+              <select
+                id="numeroCupos"
+                name="numeroCupos"
+                {...register('numeroCupos', { required: true })}
+                className="border border-gray-300 p-2 rounded w-full"
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                {/* Agrega más opciones según sea necesario */}
+              </select>
             </div>
             <button
               type="submit"

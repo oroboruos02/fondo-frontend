@@ -13,6 +13,8 @@ import FormCredit from './pages/FormCredit';
 import TableAdmin from './components/TableAdmin';
 import TableClient from './components/TableClient';
 import TableAccount from './components/TableAccount';
+import TableCredit from './components/TableCredit';
+import ReportsAdmin from './components/ReportsAdmin';
 import './App.css';
 import { AuthUserProvider } from './context/AuthUserContext';
 import ProtectedRoutesUser from './ProtectedRoutesUser';
@@ -39,6 +41,8 @@ function App() {
             <Route path="/table-admin/*" element={<TableAdmin />} />
             <Route path="/table-client/*" element={<TableClient />} />
             <Route path='/table-account/*' element={<TableAccount />} />
+            <Route path='/table-credit/*' element={<TableCredit />} />
+            <Route path='/reports-admin/*' element={<ReportsAdmin />} />
           </Routes>
         </div>
       </Router>

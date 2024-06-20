@@ -49,7 +49,7 @@ const DatesDashboard = () => {
             </div>
             <div className="flex justify-between">
               <span className="font-medium">Fondos Activos:</span>
-              <span>$80,000,000</span>
+              <span>130,000,000</span>
             </div>
           </div>
         </div>

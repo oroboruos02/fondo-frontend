@@ -5,8 +5,8 @@ const TableAdmin = () => {
   const { register, handleSubmit, reset, setValue } = useForm();
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState([
-    { nombre: 'Juan', apellidos: 'Perez', telefono: '123456789', correo: 'juanperez@gmail.com', contrasena: 'password1' },
-    { nombre: 'Ana', apellidos: 'Gomez', telefono: '987654321', correo: 'anagomez@gmail.com', contrasena: 'password2' },
+    { cedula: '1234567890', nombre: 'Juan', apellidos: 'Perez', correo: 'juanperez@gmail.com', contrasena: 'password1' },
+    { cedula: '0987654321', nombre: 'Ana', apellidos: 'Gomez', correo: 'anagomez@gmail.com', contrasena: 'password2' },
   ]);
 
   const [editingUser, setEditingUser] = useState(null);
@@ -20,7 +20,8 @@ const TableAdmin = () => {
     (user) =>
       user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.apellidos.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.telefono.includes(searchTerm)
+      user.cedula.includes(searchTerm) ||
+      user.correo.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleCreateUser = (data) => {
@@ -39,9 +40,9 @@ const TableAdmin = () => {
 
   const handleEditUser = (index) => {
     const userToEdit = users[index];
+    setValue('cedula', userToEdit.cedula);
     setValue('nombre', userToEdit.nombre);
     setValue('apellidos', userToEdit.apellidos);
-    setValue('telefono', userToEdit.telefono);
     setValue('correo', userToEdit.correo);
     setValue('contrasena', userToEdit.contrasena);
     setEditingUser(index);
@@ -72,7 +73,7 @@ const TableAdmin = () => {
         </button>
         <input
           type="text"
-          placeholder="Buscar por nombre, apellidos o teléfono"
+          placeholder="Buscar por nombre, apellidos, cédula o correo"
           value={searchTerm}
           onChange={handleSearch}
           className="border border-gray-300 p-2 rounded"
@@ -82,9 +83,9 @@ const TableAdmin = () => {
         <table className="min-w-full bg-white">
           <thead>
             <tr>
+              <th className="px-4 py-2 border">Cédula</th>
               <th className="px-4 py-2 border">Nombre</th>
               <th className="px-4 py-2 border">Apellidos</th>
-              <th className="px-4 py-2 border">Teléfono</th>
               <th className="px-4 py-2 border">Correo</th>
               <th className="px-4 py-2 border">Contraseña</th>
               <th className="px-4 py-2 border">Acciones</th>
@@ -93,9 +94,9 @@ const TableAdmin = () => {
           <tbody>
             {filteredUsers.map((user, index) => (
               <tr key={index}>
+                <td className="border px-4 py-2">{user.cedula}</td>
                 <td className="border px-4 py-2">{user.nombre}</td>
                 <td className="border px-4 py-2">{user.apellidos}</td>
-                <td className="border px-4 py-2">{user.telefono}</td>
                 <td className="border px-4 py-2">{user.correo}</td>
                 <td className="border px-4 py-2">{user.contrasena}</td>
                 <td className="border px-4 py-2">
@@ -117,6 +118,18 @@ const TableAdmin = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
+                <label htmlFor="cedula" className="block text-sm font-medium text-gray-700">
+                  Cédula
+                </label>
+                <input
+                  type="text"
+                  id="cedula"
+                  name="cedula"
+                  {...register('cedula', { required: true })}
+                  className="border border-gray-300 p-2 rounded w-full"
+                />
+              </div>
+              <div className="w-1/2 pl-2">
                 <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
                   Nombre
                 </label>
@@ -128,7 +141,9 @@ const TableAdmin = () => {
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
-              <div className="w-1/2 pl-2">
+            </div>
+            <div className="flex mb-4">
+              <div className="w-1/2 pr-2">
                 <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700">
                   Apellidos
                 </label>
@@ -137,20 +152,6 @@ const TableAdmin = () => {
                   id="apellidos"
                   name="apellidos"
                   {...register('apellidos', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
-                />
-              </div>
-            </div>
-            <div className="flex mb-4">
-              <div className="w-1/2 pr-2">
-                <label htmlFor="telefono" className="block text-sm font-medium text-gray-700">
-                  Teléfono
-                </label>
-                <input
-                  type="text"
-                  id="telefono"
-                  name="telefono"
-                  {...register('telefono', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>

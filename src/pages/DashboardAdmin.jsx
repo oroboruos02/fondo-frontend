@@ -2,11 +2,13 @@ import { Fragment, useState } from 'react';
 import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems, Transition, TransitionChild } from '@headlessui/react';
 import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, CreditCardIcon, CurrencyDollarIcon, HomeIcon, UsersIcon, XMarkIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import TableAdmin from '../components/TableAdmin'; 
 import TableClient from '../components/TableClient'; 
 import TableAccount from '../components/TableAccount';
 import DatesDashboard from '../components/DatesDashboard';
+import TableCredit from '../components/TableCredit';
+import ReportsAdmin from '../components/ReportsAdmin';
 import { useAuthUser } from '../context/AuthUserContext';
 
 const navigation = [
@@ -14,8 +16,8 @@ const navigation = [
   { name: 'Administrador', href: '/dashboard-admin/table-admin', icon: ShieldCheckIcon, current: false },
   { name: 'Clientes', href: '/dashboard-admin/table-client', icon: UsersIcon, current: false },
   { name: 'Cuentas', href: '/dashboard-admin/table-account', icon: CurrencyDollarIcon, current: false },
-  { name: 'Credito', href: '#', icon: CreditCardIcon, current: false }, 
-  { name: 'Reportes', href: '#', icon: ChartPieIcon, current: false },
+  { name: 'Credito', href: '/dashboard-admin/table-credit', icon: CreditCardIcon, current: false }, 
+  { name: 'Reportes', href: '/dashboard-admin/reports-admin', icon: ChartPieIcon, current: false },
 ];
 
 const teams = [];
@@ -33,6 +35,7 @@ export default function DashboardAdmin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { logout, user } = useAuthUser();
+  const location = useLocation();
 
   return (
     <>
@@ -88,7 +91,7 @@ export default function DashboardAdmin() {
                                 <Link
                                   to={item.href}
                                   className={classNames(
-                                    item.current
+                                    location.pathname === item.href
                                       ? 'bg-gray-50 text-yellow-600'
                                       : 'text-white hover:bg-gray-800 hover:text-yellow-600',
                                     'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
@@ -96,7 +99,7 @@ export default function DashboardAdmin() {
                                 >
                                   <item.icon
                                     className={classNames(
-                                      item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-yellow-600',
+                                      location.pathname === item.href ? 'text-yellow-600' : 'text-gray-400 group-hover:text-yellow-600',
                                       'h-6 w-6 shrink-0'
                                     )}
                                     aria-hidden="true"
@@ -123,7 +126,7 @@ export default function DashboardAdmin() {
                                   <span
                                     className={classNames(
                                       team.current
-                                        ? 'border-yellow-600 text-indigo-600'
+                                        ? 'border-indigo-600 text-yellow-600'
                                         : 'border-gray-200 text-gray-400 group-hover:border-yellow-600 group-hover:text-yellow-600',
                                       'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-black text-[0.625rem] font-medium'
                                     )}
@@ -171,7 +174,7 @@ export default function DashboardAdmin() {
                         <Link
                           to={item.href}
                           className={classNames(
-                            item.current
+                            location.pathname === item.href
                               ? 'bg-gray-50 text-yellow-600'
                               : 'text-white hover:bg-gray-800 hover:text-yellow-600',
                             'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
@@ -179,7 +182,7 @@ export default function DashboardAdmin() {
                         >
                           <item.icon
                             className={classNames(
-                              item.current ? 'text-yellow-600' : 'text-gray-400 group-hover:text-yellow-600',
+                              location.pathname === item.href ? 'text-yellow-600' : 'text-gray-400 group-hover:text-yellow-600',
                               'h-6 w-6 shrink-0'
                             )}
                             aria-hidden="true"
@@ -305,10 +308,13 @@ export default function DashboardAdmin() {
 
           <main className="p-6">
             <Routes>
+              <Route path="/" element={<Navigate to="/dashboard-admin/dates-dashboard" />} />
               <Route path="dates-dashboard" element={<DatesDashboard />} />
               <Route path="table-admin" element={<TableAdmin />} />
               <Route path="table-client" element={<TableClient />} />
               <Route path='table-account' element={<TableAccount />} />
+              <Route path='table-credit' element={<TableCredit />} />
+              <Route path='reports-admin' element={<ReportsAdmin />} />
             </Routes>
           </main>
         </div>
