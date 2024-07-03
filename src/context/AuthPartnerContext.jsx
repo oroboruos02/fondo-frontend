@@ -1,31 +1,31 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
-import { loginRequest, verifyTokenUserRequest } from "../api/authUser";
+import { loginRequestPartner, verifyTokenPartnerRequest } from "../api/authPartner";
 import Cookies from 'js-cookie';
 
-export const AuthUserContext = createContext();
+export const AuthPartnerContext = createContext();
 
-export const useAuthUser = () => { 
-    const context = useContext(AuthUserContext);
+export const useAuthPartner = () => { 
+    const context = useContext(AuthPartnerContext);
     if(!context) {
-        throw new Error("useAuthUser must be within an AuthUserProvider")
+        throw new Error("useAuthPartner must be within an AuthPartnerProvider")
     }
     return context;
 }
 
-export const AuthUserProvider = ({ children }) => {
+export const AuthPartnerProvider = ({ children }) => {
 
-    const [user, setUser] = useState(null);
-    const [isAuthenticated, setIsAuthenticate] = useState(false);
+    const [partner, setPartner] = useState(null);
+    const [isAuthenticatedPartner, setIsAuthenticatePartner] = useState(false);
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const signin = async (user) => {
+    const signin = async (partner) => {
         try {
-            const res = await loginRequest(user);
-            setIsAuthenticate(true);
-            setUser(res.data)
+            const res = await loginRequestPartner(partner);
+            setIsAuthenticatePartner(true);
+            setPartner(res.data)
         } catch (error) {
             if(Array.isArray(error.response.data)) {
             return setErrors(error.response.data)
@@ -35,9 +35,9 @@ export const AuthUserProvider = ({ children }) => {
     }
 
     const logout = () => {
-        Cookies.remove("token");
-        setIsAuthenticate(false)
-        setUser(null)
+        Cookies.remove("_token");
+        setIsAuthenticatePartner(false)
+        setPartner(null)
     }
 
     useEffect(() => {
@@ -53,25 +53,26 @@ export const AuthUserProvider = ({ children }) => {
         async function checkLogin() {
             const cookies = Cookies.get();
 
-            if(!cookies.token) {
-                setIsAuthenticate(false);
+            if(!cookies._token) {
+                setIsAuthenticatePartner(false);
                 setLoading(false);
-                return setUser(null);
+                return setPartner(null);
             }
 
             try {
-                const res = await verifyTokenUserRequest(cookies.token);
+                const res = await verifyTokenPartnerRequest(cookies.token);
                 if(!res.data) {
-                    setIsAuthenticate(false);
+                    setIsAuthenticatePartner(false);
                     setLoading(false);
                     return;
                 }
-                setIsAuthenticate(true);
-                setUser(res.data);
+
+                setIsAuthenticatePartner(true);
+                setPartner(res.data);
                 setLoading(false)
             } catch (error) {
-                setIsAuthenticate(false);
-                setUser(null);
+                setIsAuthenticatePartner(false);
+                setPartner(null);
                 setLoading(false)
             }
         }
@@ -79,15 +80,15 @@ export const AuthUserProvider = ({ children }) => {
     }, [])
 
     return( 
-        <AuthUserContext.Provider value={{
+        <AuthPartnerContext.Provider value={{
             signin,
             logout,
             loading,
-            user,
-            isAuthenticated,
+            partner,
+            isAuthenticatedPartner,
             errors
         }}>
             { children }
-        </AuthUserContext.Provider>
+        </AuthPartnerContext.Provider>
     )
 }

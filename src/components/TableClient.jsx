@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { usePartner } from '../context/PartnerContext';
 
 const TableClientes = () => {
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
+  const { partners, getPartnes, setPartners, registerPartner, errors: registerPartnerErrors } = usePartner();
+  const [shouldFetchPartners, setShouldFetchPartners] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [clientes, setClientes] = useState([
-    { cedula: '1234567890', nombre: 'Carlos', apellidos: 'Lopez', telefono: '123456789', correo: 'carloslopez@gmail.com', direccion: 'Calle Falsa 123' },
-    { cedula: '0987654321', nombre: 'Maria', apellidos: 'Rodriguez', telefono: '987654321', correo: 'mariarodriguez@gmail.com', direccion: 'Av. Siempre Viva 456' },
-  ]);
-
   const [editingCliente, setEditingCliente] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -16,65 +15,61 @@ const TableClientes = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredClientes = clientes.filter(
-    (cliente) =>
-      cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente.apellidos.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente.telefono.includes(searchTerm) ||
-      cliente.cedula.includes(searchTerm)
+  const filteredClientes = partners.filter(
+    (partner) =>
+      partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      partner.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      partner.phoneNumber.includes(searchTerm) ||
+      partner.dni.includes(searchTerm)
   );
 
-  const handleCreateCliente = (data) => {
-    setClientes([...clientes, data]);
-    reset();
-    setIsFormVisible(false);
-  };
-
-  const handleUpdateCliente = (data) => {
-    const updatedClientes = clientes.map((cliente, index) => (index === editingCliente ? data : cliente));
-    setClientes(updatedClientes);
-    reset();
-    setEditingCliente(null);
-    setIsFormVisible(false);
-  };
-
   const handleEditCliente = (index) => {
-    const clienteToEdit = clientes[index];
-    setValue('cedula', clienteToEdit.cedula);
-    setValue('nombre', clienteToEdit.nombre);
-    setValue('apellidos', clienteToEdit.apellidos);
-    setValue('telefono', clienteToEdit.telefono);
-    setValue('correo', clienteToEdit.correo);
-    setValue('direccion', clienteToEdit.direccion);
+    const clienteToEdit = partners[index];
+    setValue('dni', clienteToEdit.dni);
+    setValue('name', clienteToEdit.name);
+    setValue('lastname', clienteToEdit.lastname);
+    setValue('phoneNumber', clienteToEdit.phoneNumber);
+    setValue('email', clienteToEdit.email);
+    setValue('address', clienteToEdit.address);
     setEditingCliente(index);
     setIsFormVisible(true);
   };
 
   const handleDeleteCliente = (index) => {
-    setClientes(clientes.filter((_, i) => i !== index));
+    setPartners(partners.filter((_, i) => i !== index));
   };
 
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = handleSubmit(async (partner) => {
     if (editingCliente !== null) {
-      handleUpdateCliente(data);
+      console.log(partner);
+      reset();
     } else {
-      handleCreateCliente(data);
+      const success = await registerPartner(partner);
+      success ? reset() : '';
+      setShouldFetchPartners(true);
     }
-  };
+  });
+
+  useEffect(() => {
+    if (shouldFetchPartners) {
+      getPartnes();
+      setShouldFetchPartners(false);
+    }
+  }, [shouldFetchPartners, partners]);
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded">
-          {isFormVisible ? 'Cancelar' : 'Crear cliente'}
+          {isFormVisible ? 'Cancelar' : 'Crear socio'}
         </button>
         <input
           type="text"
-          placeholder="Buscar por nombre, apellidos, teléfono o cédula"
+          placeholder="Buscar por cédula o nombre"
           value={searchTerm}
           onChange={handleSearch}
           className="border border-gray-300 p-2 rounded"
@@ -94,14 +89,14 @@ const TableClientes = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredClientes.map((cliente, index) => (
+            {filteredClientes.map((partner, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{cliente.cedula}</td>
-                <td className="border px-4 py-2">{cliente.nombre}</td>
-                <td className="border px-4 py-2">{cliente.apellidos}</td>
-                <td className="border px-4 py-2">{cliente.telefono}</td>
-                <td className="border px-4 py-2">{cliente.correo}</td>
-                <td className="border px-4 py-2">{cliente.direccion}</td>
+                <td className="border px-4 py-2">{partner.dni}</td>
+                <td className="border px-4 py-2">{partner.name}</td>
+                <td className="border px-4 py-2">{partner.lastname}</td>
+                <td className="border px-4 py-2">{partner.phoneNumber}</td>
+                <td className="border px-4 py-2">{partner.email}</td>
+                <td className="border px-4 py-2">{partner.address}</td>
                 <td className="border px-4 py-2">
                   <button onClick={() => handleEditCliente(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
                     Editar
@@ -117,91 +112,101 @@ const TableClientes = () => {
       </div>
       {isFormVisible && (
         <div className="mt-4">
-          <h2 className="text-lg font-semibold mb-2">{editingCliente !== null ? 'Editar Cliente' : 'Agregar Nuevo Cliente'}</h2>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <h2 className="text-lg font-semibold mb-2">{editingCliente !== null ? 'Editar Socio' : 'Agregar Nuevo Socio'}</h2>
+          {registerPartnerErrors.map((error, i) => (
+            <p className="text-red-500" key={i}>{error}</p>
+          ))}
+          <form onSubmit={onSubmit}>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
-                <label htmlFor="cedula" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="dni" className="block text-sm font-medium text-gray-700">
                   Cédula
                 </label>
                 <input
                   type="text"
-                  id="cedula"
-                  name="cedula"
-                  {...register('cedula', { required: true })}
+                  id="dni"
+                  name="dni"
+                  {...register('dni', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
+                  disabled={editingCliente !== null}
                 />
+                {errors.dni && <p className="text-red-500">La cédula es requerida</p>}
               </div>
               <div className="w-1/2 pl-2">
-                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                   Nombre
                 </label>
                 <input
                   type="text"
-                  id="nombre"
-                  name="nombre"
-                  {...register('nombre', { required: true })}
+                  id="name"
+                  name="name"
+                  {...register('name', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
+                {errors.name && <p className="text-red-500">El nombre es requerido</p>}
               </div>
             </div>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
-                <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
                   Apellidos
                 </label>
                 <input
                   type="text"
-                  id="apellidos"
-                  name="apellidos"
-                  {...register('apellidos', { required: true })}
+                  id="lastname"
+                  name="lastname"
+                  {...register('lastname', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
+                {errors.lastname && <p className="text-red-500">Los apellidos son requeridos</p>}
               </div>
               <div className="w-1/2 pl-2">
-                <label htmlFor="telefono" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
                   Teléfono
                 </label>
                 <input
                   type="text"
-                  id="telefono"
-                  name="telefono"
-                  {...register('telefono', { required: true })}
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  {...register('phoneNumber', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
+                {errors.phoneNumber && <p className="text-red-500">El número telefónico es requerido</p>}
               </div>
             </div>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
-                <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Correo
                 </label>
                 <input
                   type="email"
-                  id="correo"
-                  name="correo"
-                  {...register('correo', { required: true })}
+                  id="email"
+                  name="email"
+                  {...register('email', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
+                {errors.email && <p className="text-red-500">El correo electrónico es requerido</p>}
               </div>
               <div className="w-1/2 pl-2">
-                <label htmlFor="direccion" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                   Dirección
                 </label>
                 <input
                   type="text"
-                  id="direccion"
-                  name="direccion"
-                  {...register('direccion', { required: true })}
+                  id="address"
+                  name="address"
+                  {...register('address', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
+                {errors.address && <p className="text-red-500">La dirección es requerida</p>}
               </div>
             </div>
             <button
               type="submit"
               className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
             >
-              {editingCliente !== null ? 'Actualizar cliente' : 'Crear'}
+              {editingCliente !== null ? 'Actualizar' : 'Crear'}
             </button>
           </form>
         </div>

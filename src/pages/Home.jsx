@@ -76,32 +76,42 @@ const faqs = [
     answer:
       "Un fondo de inversión es un vehículo de inversión colectiva que agrupa el dinero de varios inversores para invertir en una variedad de activos, como acciones, bonos, bienes raíces y otros instrumentos financieros.",
   },
+  {
+    question: "¿Cómo puedo invertir en un fondo de inversión?",
+    answer:
+      "Para invertir en un fondo de inversión, generalmente necesitas contactar a una entidad financiera que ofrezca fondos de inversión y abrir una cuenta de inversión. Luego, puedes seleccionar el fondo en el que deseas invertir y realizar tu inversión inicial.",
+  },
+  {
+    question: "¿Cuál es el rendimiento esperado de un fondo de inversión?",
+    answer:
+      "El rendimiento de un fondo de inversión puede variar significativamente según los activos en los que invierte y las condiciones del mercado. Los fondos de renta variable tienden a tener rendimientos potencialmente más altos pero con mayor riesgo, mientras que los fondos de renta fija ofrecen rendimientos más estables pero más bajos.",
+  },
   // More questions...
 ]
 const footerNavigation = {
   solutions: [
     { name: 'Marketing', href: '#' },
-    { name: 'Analytics', href: '#' },
-    { name: 'Commerce', href: '#' },
-    { name: 'Insights', href: '#' },
+    { name: 'Analitica', href: '#' },
+    { name: 'Comercio', href: '#' },
+    { name: 'Perspectivas', href: '#' },
   ],
   support: [
-    { name: 'Pricing', href: '#' },
-    { name: 'Documentation', href: '#' },
-    { name: 'Guides', href: '#' },
-    { name: 'API Status', href: '#' },
+    { name: 'Precios', href: '#' },
+    { name: 'Documentacion', href: '#' },
+    { name: 'Guias', href: '#' },
+    { name: 'Estado', href: '#' },
   ],
   company: [
-    { name: 'About', href: '#' },
+    { name: 'Acerca de', href: '#' },
     { name: 'Blog', href: '#' },
-    { name: 'Jobs', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Partners', href: '#' },
+    { name: 'Trabajos', href: '#' },
+    { name: 'Prensa', href: '#' },
+    { name: 'Socios', href: '#' },
   ],
   legal: [
-    { name: 'Claim', href: '#' },
-    { name: 'Privacy', href: '#' },
-    { name: 'Terms', href: '#' },
+    { name: 'Afirmar', href: '#' },
+    { name: 'Privacidad', href: '#' },
+    { name: 'Terminos', href: '#' },
   ],
 }
 
@@ -141,7 +151,7 @@ export default function Example() {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link to="/loginclient" className="text-sm font-semibold leading-6 text-white mr-4">
+            <Link to="/login-client" className="text-sm font-semibold leading-6 text-white mr-4">
               Iniciar sesión <span aria-hidden="true">&rarr;</span>
             </Link>
             <Link to="/registerclient" className="text-sm font-semibold leading-6 text-white">
@@ -182,7 +192,7 @@ export default function Example() {
                 </div>
                 <div className="py-6">
                   <Link
-                    to="/loginclient"
+                    to="/login-client"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -242,7 +252,7 @@ export default function Example() {
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
                 <Link
-                    to="/formcredit"
+                    to="/form-credit"
                     className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
                 >
                     Solicita tu préstamo aquí!
@@ -552,7 +562,7 @@ export default function Example() {
             <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                  <h3 className="text-sm font-semibold leading-6 text-white">Solutions</h3>
+                  <h3 className="text-sm font-semibold leading-6 text-white">Soluciones</h3>
                   <ul role="list" className="mt-6 space-y-4">
                     {footerNavigation.solutions.map((item) => (
                       <li key={item.name}>
@@ -564,7 +574,7 @@ export default function Example() {
                   </ul>
                 </div>
                 <div className="mt-10 md:mt-0">
-                  <h3 className="text-sm font-semibold leading-6 text-white">Support</h3>
+                  <h3 className="text-sm font-semibold leading-6 text-white">Soporte</h3>
                   <ul role="list" className="mt-6 space-y-4">
                     {footerNavigation.support.map((item) => (
                       <li key={item.name}>
@@ -578,7 +588,7 @@ export default function Example() {
               </div>
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                  <h3 className="text-sm font-semibold leading-6 text-white">Company</h3>
+                  <h3 className="text-sm font-semibold leading-6 text-white">Compania</h3>
                   <ul role="list" className="mt-6 space-y-4">
                     {footerNavigation.company.map((item) => (
                       <li key={item.name}>

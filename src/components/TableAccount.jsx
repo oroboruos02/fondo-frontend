@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { usePartner } from '../context/PartnerContext';
+import { useAccount } from '../context/AccountContext';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 const TableAccount = () => {
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const [searchTerm, setSearchTerm] = useState('');
-  const [accounts, setAccounts] = useState([
-    { id: '1', fechaApertura: '2023-01-01', cuotas: 12, inversionInicial: 1000, pagos: 100 },
-    { id: '2', fechaApertura: '2023-02-01', cuotas: 24, inversionInicial: 2000, pagos: 200 },
-  ]);
+
+  const { partners, getPartnes } = usePartner();
+  const { accounts, getAccounts, registerAccount, errors: registerAccountErrors } = useAccount();
+  const [shouldFetchPartners, setShouldFetchPartners] = useState(true);
 
   const [editingAccount, setEditingAccount] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -16,54 +21,49 @@ const TableAccount = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredAccounts = accounts.filter(
-    (account) =>
-      account.fechaApertura.includes(searchTerm) ||
-      account.cuotas.toString().includes(searchTerm) ||
-      account.inversionInicial.toString().includes(searchTerm) ||
-      account.pagos.toString().includes(searchTerm)
-  );
+  const filteredAccounts = accounts.filter((account) => {
+    const partnerId = account.partner.dni ? account.partner.dni.toString().toLowerCase() : '';
+    const partnerName = account.partner.name && account.partner.lastname 
+      ? `${account.partner.name.toLowerCase()} ${account.partner.lastname.toLowerCase()}` 
+      : '';
+    return (
+      partnerId.includes(searchTerm.toLowerCase()) ||
+      partnerName.includes(searchTerm.toLowerCase())
+    );
+  });
 
   const handleCreateAccount = (data) => {
-    setAccounts([...accounts, data]);
+    const partner = partners.find(p => p.dni === data.partnerId);
+    const newData = {
+      ...data,
+      partner: partner ? { dni: partner.dni, name: partner.name, lastname: partner.lastname } : { dni: data.partnerId, name: '', lastname: '' },
+      isActive: true  // Por defecto, las nuevas cuentas se consideran activas
+    };
+    setAccounts([...accounts, newData]);
     reset();
     setIsFormVisible(false);
-  };
-
-  const handleUpdateAccount = (data) => {
-    const updatedAccounts = accounts.map((account, index) => (index === editingAccount ? data : account));
-    setAccounts(updatedAccounts);
-    reset();
-    setEditingAccount(null);
-    setIsFormVisible(false);
-  };
-
-  const handleEditAccount = (index) => {
-    const accountToEdit = accounts[index];
-    setValue('id', accountToEdit.id);
-    setValue('fechaApertura', accountToEdit.fechaApertura);
-    setValue('cuotas', accountToEdit.cuotas);
-    setValue('inversionInicial', accountToEdit.inversionInicial);
-    setValue('pagos', accountToEdit.pagos);
-    setEditingAccount(index);
-    setIsFormVisible(true);
-  };
-
-  const handleDeleteAccount = (index) => {
-    setAccounts(accounts.filter((_, i) => i !== index));
   };
 
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
   };
 
-  const onSubmit = (data) => {
-    if (editingAccount !== null) {
-      handleUpdateAccount(data);
-    } else {
-      handleCreateAccount(data);
+  const onSubmit = handleSubmit(async (data) => {
+    const success = await registerAccount(data);
+    if (success) {
+      reset();
+      setIsFormVisible(false);
     }
-  };
+    setShouldFetchPartners(true);
+  });
+
+  useEffect(() => {
+    if (shouldFetchPartners) {
+      getAccounts();
+      getPartnes();
+      setShouldFetchPartners(false);
+    }
+  }, [shouldFetchPartners]);
 
   return (
     <div className="p-4">
@@ -73,7 +73,7 @@ const TableAccount = () => {
         </button>
         <input
           type="text"
-          placeholder="Buscar por fecha de apertura, cuotas, inversión inicial o pagos"
+          placeholder="Buscar por cédula socio o nombre del socio"
           value={searchTerm}
           onChange={handleSearch}
           className="border border-gray-300 p-2 rounded"
@@ -83,28 +83,29 @@ const TableAccount = () => {
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="px-4 py-2 border">Fecha de Apertura</th>
+              <th className="px-4 py-2 border">ID Cuenta</th>
+              <th className="px-4 py-2 border">Cédula Socio</th>
+              <th className="px-4 py-2 border">Nombre del Socio</th>
               <th className="px-4 py-2 border">Cuotas</th>
-              <th className="px-4 py-2 border">Inversión Inicial</th>
+              <th className="px-4 py-2 border">Valor</th>
+              <th className="px-4 py-2 border">Total Inscripción</th>
+              <th className="px-4 py-2 border">Fecha de Apertura</th>
               <th className="px-4 py-2 border">Pagos</th>
-              <th className="px-4 py-2 border">Acciones</th>
+              <th className="px-4 py-2 border">Activo</th> {/* Nueva columna */}
             </tr>
           </thead>
           <tbody>
             {filteredAccounts.map((account, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{account.fechaApertura}</td>
-                <td className="border px-4 py-2">{account.cuotas}</td>
-                <td className="border px-4 py-2">{account.inversionInicial}</td>
-                <td className="border px-4 py-2">{account.pagos}</td>
-                <td className="border px-4 py-2">
-                  <button onClick={() => handleEditAccount(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
-                    Editar
-                  </button>
-                  <button onClick={() => handleDeleteAccount(index)} className="bg-red-500 text-white px-2 py-1 rounded">
-                    Eliminar
-                  </button>
-                </td>
+                <td className="border px-4 py-2">{account.id}</td>
+                <td className="border px-4 py-2">{account.partner.dni}</td>
+                <td className="border px-4 py-2">{account.partner.name} {account.partner.lastname}</td>
+                <td className="border px-4 py-2">{account.quotas}</td>
+                <td className="border px-4 py-2">{account.value}</td>
+                <td className="border px-4 py-2">{account.initialInvestment}</td>
+                <td className="border px-4 py-2">{dayjs(account.openingDate).utc().format("DD/MM/YYYY")}</td>
+                <td className="border px-4 py-2">{account.myPayments}</td>
+                <td className="border px-4 py-2">{account.isActive ? 'Sí' : 'No'}</td> {/* Corregido 'Sí' duplicado */}
               </tr>
             ))}
           </tbody>
@@ -112,78 +113,77 @@ const TableAccount = () => {
       </div>
       {isFormVisible && (
         <div className="mt-4">
-          <h2 className="text-lg font-semibold mb-2">{editingAccount !== null ? 'Editar Cuenta' : 'Agregar Nueva Cuenta'}</h2>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <h2 className="text-lg font-semibold mb-2">Agregar Nueva Cuenta</h2>
+          {registerAccountErrors.map((error, i) => (
+            <p className='text-red-500' key={i}>{error}</p>
+          ))}
+          <form onSubmit={onSubmit}>
             <div className="mb-4">
-              <label htmlFor="id" className="block text-sm font-medium text-gray-700">
-                ID
+              <label htmlFor="partnerId" className="block text-sm font-medium text-gray-700">
+                Socio
               </label>
               <select
-                id="id"
-                name="id"
-                {...register('id', { required: true })}
+                id="partnerId"
+                name="partnerId"
+                {...register('partnerId', { required: true })}
                 className="border border-gray-300 p-2 rounded w-full"
               >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-                <option value="25">25</option>
-                <option value="26">26</option>
-                <option value="27">27</option>
-                <option value="28">28</option>
-                <option value="29">29</option>
-                <option value="30">30</option>
-                {/* Agrega más opciones según sea necesario */}
+                {
+                  partners.map(partner => (
+                    <option key={partner.dni} value={partner.dni}>{partner.name} {partner.lastname}</option>
+                  ))
+                }
               </select>
+              {errors.partnerId && <p className='text-red-500'>El socio es requerido</p>}
             </div>
             <div className="mb-4">
-              <label htmlFor="numeroCupos" className="block text-sm font-medium text-gray-700">
-                Número de Cupos
+              <label htmlFor="partnerType" className="block text-sm font-medium text-gray-700">
+                Tipo de Socio
               </label>
               <select
-                id="numeroCupos"
-                name="numeroCupos"
-                {...register('numeroCupos', { required: true })}
+                id="partnerType"
+                name="partnerType"
+                {...register('partnerType', { required: true })}
                 className="border border-gray-300 p-2 rounded w-full"
               >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                {/* Agrega más opciones según sea necesario */}
+                <option value="new">Nuevo</option>
+                <option value="old">Antiguo</option>
               </select>
+              {errors.partnerType && <p className='text-red-500'>El tipo de socio es requerido</p>}
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="quotas" className="block text-sm font-medium text-gray-700">
+                Número de Cuotas
+              </label>
+              <input
+                id="quotas"
+                type='number'
+                name="quotas"
+                {...register('quotas', { required: true })}
+                className="border border-gray-300 p-2 rounded w-full"
+              />
+              {errors.quotas && <p className='text-red-500'>El número de cuotas es requerido</p>}
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="openingDate" className="block text-sm font-medium text-gray-700">
+                Fecha de Apertura
+              </label>
+              <input
+                id="openingDate"
+                type="date"
+                name="openingDate"
+                {...register('openingDate', { required: true })}
+                className="border border-gray-300 p-2 rounded w-full"
+              />
+              {errors.openingDate && <p className='text-red-500'>La fecha de apertura es requerida</p>}
             </div>
             <button
               type="submit"
               className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
             >
-              {editingAccount !== null ? 'Actualizar cuenta' : 'Crear cuenta'}
+              Crear cuenta
             </button>
           </form>
         </div>

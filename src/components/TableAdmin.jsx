@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useUser } from '../context/UserContext';
 
 const TableAdmin = () => {
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
   const [searchTerm, setSearchTerm] = useState('');
-  const [users, setUsers] = useState([
-    { cedula: '1234567890', nombre: 'Juan', apellidos: 'Perez', correo: 'juanperez@gmail.com', contrasena: 'password1' },
-    { cedula: '0987654321', nombre: 'Ana', apellidos: 'Gomez', correo: 'anagomez@gmail.com', contrasena: 'password2' },
-  ]);
+
+  const { users, getUsers, registerUser, errors: registerUserErrors } = useUser();
+  const [shouldFetchUsers, setShouldFetchUsers] = useState(true);
 
   const [editingUser, setEditingUser] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -18,10 +19,10 @@ const TableAdmin = () => {
 
   const filteredUsers = users.filter(
     (user) =>
-      user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.apellidos.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.cedula.includes(searchTerm) ||
-      user.correo.toLowerCase().includes(searchTerm.toLowerCase())
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.dni.includes(searchTerm) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleCreateUser = (data) => {
@@ -40,11 +41,10 @@ const TableAdmin = () => {
 
   const handleEditUser = (index) => {
     const userToEdit = users[index];
-    setValue('cedula', userToEdit.cedula);
-    setValue('nombre', userToEdit.nombre);
-    setValue('apellidos', userToEdit.apellidos);
-    setValue('correo', userToEdit.correo);
-    setValue('contrasena', userToEdit.contrasena);
+    setValue('dni', userToEdit.dni);
+    setValue('name', userToEdit.name);
+    setValue('lastname', userToEdit.lastname);
+    setValue('email', userToEdit.email);
     setEditingUser(index);
     setIsFormVisible(true);
   };
@@ -57,13 +57,22 @@ const TableAdmin = () => {
     setIsFormVisible(!isFormVisible);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = handleSubmit(async (user) => {
     if (editingUser !== null) {
-      handleUpdateUser(data);
+      handleUpdateUser(user);
     } else {
-      handleCreateUser(data);
+      const success = await registerUser(user);
+      success ? reset() : '';
+      setShouldFetchUsers(true);
     }
-  };
+  });
+
+  useEffect(() => {
+    if (shouldFetchUsers) {
+      getUsers();
+      setShouldFetchUsers(false);
+    }
+  }, [shouldFetchUsers, users]);
 
   return (
     <div className="p-4">
@@ -87,18 +96,16 @@ const TableAdmin = () => {
               <th className="px-4 py-2 border">Nombre</th>
               <th className="px-4 py-2 border">Apellidos</th>
               <th className="px-4 py-2 border">Correo</th>
-              <th className="px-4 py-2 border">Contraseña</th>
               <th className="px-4 py-2 border">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {filteredUsers.map((user, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{user.cedula}</td>
-                <td className="border px-4 py-2">{user.nombre}</td>
-                <td className="border px-4 py-2">{user.apellidos}</td>
-                <td className="border px-4 py-2">{user.correo}</td>
-                <td className="border px-4 py-2">{user.contrasena}</td>
+                <td className="border px-4 py-2">{user.dni}</td>
+                <td className="border px-4 py-2">{user.name}</td>
+                <td className="border px-4 py-2">{user.lastname}</td>
+                <td className="border px-4 py-2">{user.email}</td>
                 <td className="border px-4 py-2">
                   <button onClick={() => handleEditUser(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
                     Editar
@@ -115,7 +122,12 @@ const TableAdmin = () => {
       {isFormVisible && (
         <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2">{editingUser !== null ? 'Editar Usuario' : 'Agregar Nuevo Administrador'}</h2>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          {
+            registerUserErrors.map((error, i) => (
+              <p className='text-red-500' key={i}>{error}</p>
+            ))
+          }
+          <form onSubmit={onSubmit}>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
                 <label htmlFor="cedula" className="block text-sm font-medium text-gray-700">
@@ -123,11 +135,13 @@ const TableAdmin = () => {
                 </label>
                 <input
                   type="text"
-                  id="cedula"
-                  name="cedula"
-                  {...register('cedula', { required: true })}
+                  id="dni"
+                  name="dni"
+                  {...register('dni', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
+                  disabled={editingUser !== null}
                 />
+                {errors.dni && <p className='text-red-500'>La cédula es requerida</p>}
               </div>
               <div className="w-1/2 pl-2">
                 <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
@@ -135,11 +149,12 @@ const TableAdmin = () => {
                 </label>
                 <input
                   type="text"
-                  id="nombre"
-                  name="nombre"
-                  {...register('nombre', { required: true })}
+                  id="name"
+                  name="name"
+                  {...register('name', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
+                {errors.name && <p className='text-red-500'>El nombre es requerido</p>}
               </div>
             </div>
             <div className="flex mb-4">
@@ -149,11 +164,12 @@ const TableAdmin = () => {
                 </label>
                 <input
                   type="text"
-                  id="apellidos"
-                  name="apellidos"
-                  {...register('apellidos', { required: true })}
+                  id="lastname"
+                  name="lastname"
+                  {...register('lastname', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
+                {errors.lastname && <p className='text-red-500'>El apellido es requerido</p>}
               </div>
               <div className="w-1/2 pl-2">
                 <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
@@ -161,11 +177,12 @@ const TableAdmin = () => {
                 </label>
                 <input
                   type="email"
-                  id="correo"
-                  name="correo"
-                  {...register('correo', { required: true })}
+                  id="email"
+                  name="email"
+                  {...register('email', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
+                {errors.email && <p className='text-red-500'>El correo electrónico es requerido</p>}
               </div>
             </div>
             <div className="flex mb-4">
@@ -175,11 +192,12 @@ const TableAdmin = () => {
                 </label>
                 <input
                   type="password"
-                  id="contrasena"
-                  name="contrasena"
-                  {...register('contrasena', { required: true })}
+                  id="password"
+                  name="password"
+                  {...register('password', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
+                {errors.lastname && <p className='text-red-500'>La contraseña es requerida</p>}
               </div>
             </div>
             <button
