@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useUser } from '../context/UserContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TableAdmin = () => {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
@@ -29,6 +31,7 @@ const TableAdmin = () => {
     setUsers([...users, data]);
     reset();
     setIsFormVisible(false);
+    toast.success('Administrador creado con éxito');
   };
 
   const handleUpdateUser = (data) => {
@@ -62,8 +65,10 @@ const TableAdmin = () => {
       handleUpdateUser(user);
     } else {
       const success = await registerUser(user);
-      success ? reset() : '';
-      setShouldFetchUsers(true);
+      if (success) {
+        setShouldFetchUsers(true);
+        toast.success('Administrador creado con éxito');
+      }
     }
   });
 
@@ -72,10 +77,11 @@ const TableAdmin = () => {
       getUsers();
       setShouldFetchUsers(false);
     }
-  }, [shouldFetchUsers, users]);
+  }, [shouldFetchUsers]);
 
   return (
     <div className="p-4">
+      <ToastContainer />
       <div className="flex justify-between items-center mb-4">
         <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded">
           {isFormVisible ? 'Cancelar' : 'Crear administrador'}
@@ -122,11 +128,9 @@ const TableAdmin = () => {
       {isFormVisible && (
         <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2">{editingUser !== null ? 'Editar Usuario' : 'Agregar Nuevo Administrador'}</h2>
-          {
-            registerUserErrors.map((error, i) => (
-              <p className='text-red-500' key={i}>{error}</p>
-            ))
-          }
+          {registerUserErrors.map((error, i) => (
+            <p className="text-red-500" key={i}>{error}</p>
+          ))}
           <form onSubmit={onSubmit}>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
@@ -141,7 +145,7 @@ const TableAdmin = () => {
                   className="border border-gray-300 p-2 rounded w-full"
                   disabled={editingUser !== null}
                 />
-                {errors.dni && <p className='text-red-500'>La cédula es requerida</p>}
+                {errors.dni && <p className="text-red-500">La cédula es requerida</p>}
               </div>
               <div className="w-1/2 pl-2">
                 <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
@@ -154,7 +158,7 @@ const TableAdmin = () => {
                   {...register('name', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
-                {errors.name && <p className='text-red-500'>El nombre es requerido</p>}
+                {errors.name && <p className="text-red-500">El nombre es requerido</p>}
               </div>
             </div>
             <div className="flex mb-4">
@@ -169,7 +173,7 @@ const TableAdmin = () => {
                   {...register('lastname', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
-                {errors.lastname && <p className='text-red-500'>El apellido es requerido</p>}
+                {errors.lastname && <p className="text-red-500">El apellido es requerido</p>}
               </div>
               <div className="w-1/2 pl-2">
                 <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
@@ -182,7 +186,7 @@ const TableAdmin = () => {
                   {...register('email', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
-                {errors.email && <p className='text-red-500'>El correo electrónico es requerido</p>}
+                {errors.email && <p className="text-red-500">El correo electrónico es requerido</p>}
               </div>
             </div>
             <div className="flex mb-4">
@@ -197,7 +201,7 @@ const TableAdmin = () => {
                   {...register('password', { required: true })}
                   className="border border-gray-300 p-2 rounded w-full"
                 />
-                {errors.lastname && <p className='text-red-500'>La contraseña es requerida</p>}
+                {errors.password && <p className="text-red-500">La contraseña es requerida</p>}
               </div>
             </div>
             <button

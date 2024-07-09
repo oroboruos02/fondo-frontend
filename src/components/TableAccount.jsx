@@ -4,6 +4,10 @@ import { usePartner } from '../context/PartnerContext';
 import { useAccount } from '../context/AccountContext';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Modal from 'react-modal';
+
 dayjs.extend(utc);
 
 const TableAccount = () => {
@@ -11,11 +15,12 @@ const TableAccount = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const { partners, getPartnes } = usePartner();
-  const { accounts, getAccounts, registerAccount, errors: registerAccountErrors } = useAccount();
+  const { accounts, getAccounts, registerAccount, errors: registerAccountErrors, disableAccount } = useAccount();
   const [shouldFetchPartners, setShouldFetchPartners] = useState(true);
 
-  const [editingAccount, setEditingAccount] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAccountId, setSelectedAccountId] = useState(null);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -32,30 +37,50 @@ const TableAccount = () => {
     );
   });
 
-  const handleCreateAccount = (data) => {
+  const handleCreateAccount = async (data) => {
     const partner = partners.find(p => p.dni === data.partnerId);
     const newData = {
       ...data,
       partner: partner ? { dni: partner.dni, name: partner.name, lastname: partner.lastname } : { dni: data.partnerId, name: '', lastname: '' },
       isActive: true  // Por defecto, las nuevas cuentas se consideran activas
     };
-    setAccounts([...accounts, newData]);
-    reset();
-    setIsFormVisible(false);
+    const success = await registerAccount(newData);
+    if (success) {
+      toast.success('Cuenta creada con éxito');
+      getAccounts(); // Recargar las cuentas
+      reset();
+      setIsFormVisible(false);
+    } else {
+      toast.error('Error al crear la cuenta');
+    }
   };
 
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
   };
 
-  const onSubmit = handleSubmit(async (data) => {
-    const success = await registerAccount(data);
+  const onSubmit = handleSubmit(handleCreateAccount);
+
+  const handleDeactivate = async () => {
+    const success = await disableAccount(selectedAccountId);
     if (success) {
-      reset();
-      setIsFormVisible(false);
+      toast.success('Cuenta desactivada con éxito');
+      getAccounts(); // Recargar las cuentas
+    } else {
+      toast.error('Error al desactivar la cuenta');
     }
-    setShouldFetchPartners(true);
-  });
+    closeModal();
+  };
+
+  const openModal = (accountId) => {
+    setSelectedAccountId(accountId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedAccountId(null);
+  };
 
   useEffect(() => {
     if (shouldFetchPartners) {
@@ -67,6 +92,7 @@ const TableAccount = () => {
 
   return (
     <div className="p-4">
+      <ToastContainer />
       <div className="flex justify-between items-center mb-4">
         <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded">
           {isFormVisible ? 'Cancelar' : 'Crear cuenta'}
@@ -91,7 +117,8 @@ const TableAccount = () => {
               <th className="px-4 py-2 border">Total Inscripción</th>
               <th className="px-4 py-2 border">Fecha de Apertura</th>
               <th className="px-4 py-2 border">Pagos</th>
-              <th className="px-4 py-2 border">Activo</th> {/* Nueva columna */}
+              <th className="px-4 py-2 border">Activo</th>
+              <th className="px-4 py-2 border">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -105,7 +132,17 @@ const TableAccount = () => {
                 <td className="border px-4 py-2">{account.initialInvestment}</td>
                 <td className="border px-4 py-2">{dayjs(account.openingDate).utc().format("DD/MM/YYYY")}</td>
                 <td className="border px-4 py-2">{account.myPayments}</td>
-                <td className="border px-4 py-2">{account.isActive ? 'Sí' : 'No'}</td> {/* Corregido 'Sí' duplicado */}
+                <td className="border px-4 py-2">{account.isActive ? 'Sí' : 'No'}</td>
+                <td className="border px-4 py-2">
+                  {account.isActive && (
+                    <button
+                      className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
+                      onClick={() => openModal(account.id)}
+                    >
+                      Desactivar
+                    </button>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -188,6 +225,26 @@ const TableAccount = () => {
           </form>
         </div>
       )}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Confirmar Desactivación"
+        className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+      >
+        <div className="bg-white rounded-lg p-6">
+          <h2 className="text-xl font-bold mb-4">Confirmar Desactivación</h2>
+          <p className="mb-4">¿Está seguro de que desea desactivar esta cuenta?</p>
+          <div className="flex justify-end">
+            <button onClick={closeModal} className="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded mr-2">
+              Cancelar
+            </button>
+            <button onClick={handleDeactivate} className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded">
+              Desactivar
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

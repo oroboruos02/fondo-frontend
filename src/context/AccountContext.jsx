@@ -1,7 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
-/* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
-import { getAccountsPartnerRequest, getAccountsRequest, registerAccountRequest } from "../api/account";
+import { getAccountsPartnerRequest, getAccountsRequest, registerAccountRequest, disableAccountRequest } from "../api/account";
 
 const AccountContext = createContext();
 
@@ -53,6 +51,17 @@ export function AccountProvider ({ children }) {
         }
     }
 
+    const disableAccount = async(id) => {
+
+        try{
+        const res = await disableAccountRequest (id)
+        console.log(res)
+        return true
+        }catch (error){
+        console.log(error)
+        }
+        }
+
     useEffect(() => {
         if(errors.length > 0) {
             const timer = setTimeout(() => {
@@ -70,6 +79,7 @@ export function AccountProvider ({ children }) {
             getAccounts,
             getMyAccountsPartner,
             registerAccount,
+            disableAccount,
         }}>
             { children }
         </AccountContext.Provider>

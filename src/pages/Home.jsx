@@ -13,59 +13,67 @@ const navigation = [
 ]
 const features = [
   {
-    name: 'Push to deploy.',
-    description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit aute id magna.',
+    name: 'Préstamo de Capital.',
+    description: 'Ofrecemos préstamos de capital a empresas con alto potencial de crecimiento, ayudándoles a expandir sus operaciones y a mejorar su rendimiento financiero. Nuestro enfoque se centra en analizar minuciosamente cada oportunidad para garantizar que nuestros préstamos generen retornos consistentes y seguros.',
     icon: CloudArrowUpIcon,
   },
   {
-    name: 'SSL certificates.',
-    description: 'Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.',
+    name: 'Inversión en Acciones.',
+    description: 'Invertimos en una selección cuidadosamente curada de acciones, buscando empresas con sólidos fundamentos financieros y un crecimiento sostenible. Nuestro equipo de analistas utiliza técnicas avanzadas de análisis de mercado para identificar las mejores oportunidades de inversión en el mercado bursátil.',
     icon: LockClosedIcon,
   },
   {
-    name: 'Simple queues.',
-    description: 'Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.',
+    name: 'Inversión en Empresas de Software SAAS.',
+    description: 'Nos especializamos en invertir en empresas de software con modelos de facturación recurrente (SAAS), reconociendo el potencial de crecimiento y la estabilidad que ofrecen estas empresas. Apoyamos a estas compañías no solo con capital, sino también con asesoría estratégica para impulsar su desarrollo y expansión.',
     icon: ArrowPathIcon,
   },
   {
-    name: 'Advanced security.',
-    description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit aute id magna.',
+    name: 'Compromiso con Nuestros Inversionistas.',
+    description: 'En Capitum, valoramos la transparencia y la comunicación continua con nuestros socios. Proporcionamos informes trimestrales detallados sobre el rendimiento de tus inversiones y mantenemos un canal abierto para cualquier consulta o asesoría que necesites.',
     icon: FingerPrintIcon,
   },
   {
-    name: 'Powerful API.',
-    description: 'Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.',
+    name: 'Únete a Capitum.',
+    description: 'Si buscas una manera confiable y efectiva de hacer crecer tu patrimonio, Capitum es tu mejor opción. Te invitamos a formar parte de nuestro fondo de inversión y a descubrir cómo nuestras estrategias pueden ayudarte a alcanzar tus objetivos financieros.',
     icon: Cog6ToothIcon,
   },
   {
-    name: 'Database backups.',
-    description: 'Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. ',
+    name: 'Contacta con nosotros.',
+    description: 'Visita nuestra página web o contáctanos para más información sobre cómo unirte a Capitum y comenzar tu viaje hacia el éxito financiero. ',
     icon: ServerIcon,
   },
 ]
 const tiers = [
   {
-    name: 'Hobby',
-    id: 'tier-hobby',
+    name: 'Inversiones Básicas',
+    id: 'tier-basic',
     href: '#',
-    priceMonthly: '$19',
-    description: "The perfect plan if you're just getting started with our product.",
-    features: ['25 products', 'Up to 10,000 subscribers', 'Advanced analytics', '24-hour support response time'],
+    priceMonthly: '$100',
+    description: "El plan perfecto si estás comenzando a invertir.",
+    features: [
+      'Acceso a préstamos de capital',
+      'Inversiones en acciones',
+      'Inversiones en empresas de software (SAAS)',
+      'Consultoría básica de inversión',
+      'Reporte mensual de inversiones',
+    ],
     featured: false,
   },
   {
-    name: 'Enterprise',
-    id: 'tier-enterprise',
+    name: 'Inversiones Avanzadas',
+    id: 'tier-advanced',
     href: '#',
-    priceMonthly: '$49',
-    description: 'Dedicated support and infrastructure for your company.',
+    priceMonthly: '$500',
+    description: 'Soporte dedicado e infraestructura avanzada para tus inversiones.',
     features: [
-      'Unlimited products',
-      'Unlimited subscribers',
-      'Advanced analytics',
-      'Dedicated support representative',
-      'Marketing automations',
-      'Custom integrations',
+      'Acceso a préstamos de capital prioritarios',
+      'Inversiones en acciones premium',
+      'Inversiones en empresas de software (SAAS) con alta rentabilidad',
+      'Consultoría avanzada de inversión',
+      'Reporte semanal de inversiones',
+      'Representante dedicado de soporte',
+      'Automatizaciones de marketing',
+      'Integraciones personalizadas',
     ],
     featured: true,
   },
@@ -130,7 +138,7 @@ export default function Example() {
           <div className="flex lg:flex-1">
             <Link to="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <img className="h-10 w-auto" src="./fondo.png" alt="" />
+              <img className="h-12 w-auto" src="./fondo.png" alt="" />
             </Link>
           </div>
           <div className="flex lg:hidden">
@@ -213,16 +221,17 @@ export default function Example() {
       </header>
       <main>
         {/* Hero section */}
-        <div className="relative isolate overflow-hidden bg-gray-900 pb-16 pt-14 sm:pb-20 ">
-            <img
-                src="./banner2.jpg"
-                alt=""
-                className="absolute inset-0 -z-10 h-full w-full object-cover"
-            />
-          <div
-            className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-            aria-hidden="true"
-          >
+        <div className="relative isolate overflow-hidden bg-gray-900 pb-16 pt-14 sm:pb-20">
+  <img
+    src="./banner.jpg"
+    alt=""
+    className="absolute inset-0 -z-10 h-full w-full object-cover"
+  />
+  <div className="absolute inset-0 -z-10 bg-black opacity-50" /> {/* Overlay oscuro */}
+  <div
+    className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+    aria-hidden="true"
+  >
             <div
               className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
               style={{
@@ -232,23 +241,24 @@ export default function Example() {
             />
           </div>
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+            <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-28">
               <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-                <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20">
+                {/* <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20">
                   Announcing our next round of funding.{' '}
                   <a href="#" className="font-semibold text-white">
                     <span className="absolute inset-0" aria-hidden="true" />
                     Read more <span aria-hidden="true">&rarr;</span>
                   </a>
-                </div>
+                </div> */}
               </div>
               <div className="text-center">
                 <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-                  Deploy to the cloud with confidence
+                Bienvenido a Capitum: Tu Aliado en Inversiones Estratégicas
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-gray-300">
-                  Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt
-                  amet fugiat veniam occaecat fugiat aliqua.
+                  En Capitum, entendemos que el éxito financiero se construye sobre la base de inversiones inteligentes y diversificadas.
+                  Nuestro fondo de inversión está diseñado para ofrecerte oportunidades sólidas y rentables en tres áreas clave: préstamos
+                  de capital, inversiones en acciones, e inversiones en empresas de software con facturación recurrente (SAAS).
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
                 <Link
@@ -257,9 +267,9 @@ export default function Example() {
                 >
                     Solicita tu préstamo aquí!
                 </Link>
-                    <Link to="#" className="text-sm font-semibold leading-6 text-white">
+                    {/* <Link to="#" className="text-sm font-semibold leading-6 text-white">
                         Live demo <span aria-hidden="true">→</span>
-                    </Link>
+                    </Link> */}
                 </div>
               </div>
             </div>
@@ -268,8 +278,8 @@ export default function Example() {
             <div className="mx-auto grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
               <img
                 className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/transistor-logo-white.svg"
-                alt="Transistor"
+                src="https://axongroup.com.co/wp-content/uploads/logo-axon-group-blanco.svg"
+                alt="Axon-Group"
                 width={158}
                 height={48}
               />
@@ -321,18 +331,20 @@ export default function Example() {
         <div className="mt-32 sm:mt-56">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl sm:text-center">
-              <h2 className="text-base font-semibold leading-7 text-indigo-600">Everything you need</h2>
-              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">No server? No problem.</p>
+              {/* <h2 className="text-base font-semibold leading-7 text-indigo-600">Everything you need</h2> */}
+              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">¿Quiénes Somos?</p>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque,
-                iste dolor cupiditate blanditiis.
+              Capitum es un fondo de inversión comprometido con la creación de valor financiero a largo plazo para nuestros socios.
+              Nuestra misión es ofrecer soluciones de inversión que se alineen con tus objetivos financieros, proporcionándote el
+              respaldo y la experiencia necesarios para maximizar tus rendimientos.
+
               </p>
             </div>
           </div>
           <div className="relative overflow-hidden pt-16">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <img
-                src="./img.jpg"
+                src="./section.jpg"
                 alt="App screenshot"
                 className="mb-[-12%] rounded-xl shadow-2xl ring-1 ring-gray-900/10"
                 width={2432}
@@ -376,7 +388,7 @@ export default function Example() {
               <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-auto">
                 <img
                   className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover shadow-2xl"
-                  src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2102&q=80"
+                  src="./section3.jpg"
                   alt=""
                 />
               </div>
@@ -396,15 +408,17 @@ export default function Example() {
                   <use href="#b56e9dab-6ccb-4d32-ad02-6b4bb5d9bbeb" x={86} />
                 </svg>
                 <blockquote className="text-xl font-semibold leading-8 text-white sm:text-2xl sm:leading-9">
+                <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Transforma tu Futuro Financiero con Inversiones Inteligentes</p>
                   <p>
-                    Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
-                    tincidunt nunc. Et non lorem tortor posuere. Nunc eu scelerisque interdum eget tellus non nibh
-                    scelerisque bibendum.
+                  En Capitum, creemos que cada inversión es una oportunidad para construir un futuro más sólido y próspero. Al invertir con nosotros,
+                  estás dando un paso hacia la libertad financiera y el crecimiento sostenible. Nuestros expertos están dedicados a maximizar tu
+                  capital a través de estrategias diversificadas y bien fundamentadas. No solo inviertes tu dinero, inviertes en tu tranquilidad y en un
+                  futuro lleno de posibilidades. ¡Empieza hoy y ve cómo tus sueños financieros se convierten en realidad!
                   </p>
                 </blockquote>
                 <figcaption className="mt-8 text-base">
-                  <div className="font-semibold text-white">Judith Black</div>
-                  <div className="mt-1 text-gray-400">CEO of Tuple</div>
+                  <div className="font-semibold text-white">Yesid Alfonso Anacona</div>
+                  <div className="mt-1 text-gray-400">CEO of Axon Group</div>
                 </figcaption>
               </figure>
             </div>
@@ -426,15 +440,14 @@ export default function Example() {
             />
           </div>
           <div className="mx-auto max-w-2xl text-center lg:max-w-4xl">
-            <h2 className="text-base font-semibold leading-7 text-indigo-600">Pricing</h2>
-            <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-              The right price for you, whoever you are
-            </p>
-          </div>
-          <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600">
-            Qui iusto aut est earum eos quae. Eligendi est at nam aliquid ad quo reprehenderit in aliquid fugiat dolorum
-            voluptatibus.
-          </p>
+  <h2 className="text-base font-semibold leading-7 text-indigo-600">Fondo de Inversión Capitum</h2>
+  <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+    Inversiones estratégicas para tu futuro financiero
+  </p>
+</div>
+<p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600">
+  En Capitum, nos especializamos en ofrecer oportunidades de inversión sólidas y rentables en tres áreas clave: préstamos de capital, inversiones en acciones, e inversiones en empresas de software con facturación recurrente (SAAS). Nuestro compromiso es ayudarte a alcanzar tus objetivos financieros con estrategias personalizadas y asesoramiento experto.
+</p>
           <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
             {tiers.map((tier, tierIdx) => (
               <div
@@ -506,7 +519,7 @@ export default function Example() {
                     'mt-8 block rounded-md px-3.5 py-2.5 text-center text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:mt-10'
                   )}
                 >
-                  Get started today
+                  Empiece hoy
                 </a>
               </div>
             ))}

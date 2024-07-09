@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { usePartner } from '../context/PartnerContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TableClientes = () => {
   const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
@@ -45,12 +47,17 @@ const TableClientes = () => {
 
   const onSubmit = handleSubmit(async (partner) => {
     if (editingCliente !== null) {
+      // Actualizar el socio existente
+      // Aquí puedes implementar la lógica de actualización del socio
       console.log(partner);
       reset();
     } else {
       const success = await registerPartner(partner);
-      success ? reset() : '';
-      setShouldFetchPartners(true);
+      if (success) {
+        toast.success('Socio creado con éxito');
+        reset();
+        setShouldFetchPartners(true);
+      }
     }
   });
 
@@ -63,6 +70,7 @@ const TableClientes = () => {
 
   return (
     <div className="p-4">
+      <ToastContainer />
       <div className="flex justify-between items-center mb-4">
         <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded">
           {isFormVisible ? 'Cancelar' : 'Crear socio'}
