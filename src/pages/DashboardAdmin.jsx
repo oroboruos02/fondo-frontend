@@ -299,8 +299,8 @@ export default function DashboardAdmin() {
                         </MenuItem>
                         
                       ))} */}
-                      <Link className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100')}>Perfil</Link>
-                      <Link to='/login-admin' onClick={() => {logout()}} className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100')}>Cerrar sesión</Link>
+                      <Link className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-bold')}>Perfil</Link>
+                      <Link to='/' onClick={() => {logout()}} className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-bold')}>Cerrar sesión</Link>
                     </MenuItems>
                   </Transition>
                 </Menu>

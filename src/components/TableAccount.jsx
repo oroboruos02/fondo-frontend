@@ -94,28 +94,28 @@ const TableAccount = () => {
     <div className="p-4">
       <ToastContainer />
       <div className="flex justify-between items-center mb-4">
-        <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded">
+        <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm">
           {isFormVisible ? 'Cancelar' : 'Crear cuenta'}
         </button>
         <input
           type="text"
-          placeholder="Buscar por cédula socio o nombre del socio"
+          placeholder="Buscar por cédula o nombre"
           value={searchTerm}
           onChange={handleSearch}
-          className="border border-gray-300 p-2 rounded"
+          className="border border-gray-300 p-2 rounded text-sm"
         />
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="px-4 py-2 border">ID Cuenta</th>
-              <th className="px-4 py-2 border">Cédula Socio</th>
-              <th className="px-4 py-2 border">Nombre del Socio</th>
+              <th className="px-4 py-2 border ">ID cuenta</th>
+              <th className="px-4 py-2 border">Cédula socio</th>
+              <th className="px-4 py-2 border">Nombre socio</th>
               <th className="px-4 py-2 border">Cuotas</th>
               <th className="px-4 py-2 border">Valor</th>
-              <th className="px-4 py-2 border">Total Inscripción</th>
-              <th className="px-4 py-2 border">Fecha de Apertura</th>
+              <th className="px-4 py-2 border">Total inscripción</th>
+              <th className="px-4 py-2 border">Fecha apertura</th>
               <th className="px-4 py-2 border">Pagos</th>
               <th className="px-4 py-2 border">Activo</th>
               <th className="px-4 py-2 border">Acciones</th>
@@ -124,16 +124,16 @@ const TableAccount = () => {
           <tbody>
             {filteredAccounts.map((account, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{account.id}</td>
-                <td className="border px-4 py-2">{account.partner.dni}</td>
-                <td className="border px-4 py-2">{account.partner.name} {account.partner.lastname}</td>
-                <td className="border px-4 py-2">{account.quotas}</td>
-                <td className="border px-4 py-2">{account.value}</td>
-                <td className="border px-4 py-2">{account.initialInvestment}</td>
-                <td className="border px-4 py-2">{dayjs(account.openingDate).utc().format("DD/MM/YYYY")}</td>
-                <td className="border px-4 py-2">{account.myPayments}</td>
-                <td className="border px-4 py-2">{account.isActive ? 'Sí' : 'No'}</td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-sm">{account.id}</td>
+                <td className="border px-4 py-2 text-sm">{account.partner.dni}</td>
+                <td className="border px-4 py-2 text-sm">{account.partner.name} {account.partner.lastname}</td>
+                <td className="border px-4 py-2 text-sm">{account.quotas}</td>
+                <td className="border px-4 py-2 text-sm">{account.value}</td>
+                <td className="border px-4 py-2 text-sm">{account.initialInvestment}</td>
+                <td className="border px-4 py-2 text-sm">{dayjs(account.openingDate).utc().format("DD/MM/YYYY")}</td>
+                <td className="border px-4 py-2 text-sm">{account.myPayments}</td>
+                <td className="border px-4 py-2 text-sm">{account.isActive ? 'Sí' : 'No'}</td>
+                <td className="border px-4 py-2 text-sm">
                   {account.isActive && (
                     <button
                       className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
@@ -163,7 +163,7 @@ const TableAccount = () => {
                 id="partnerId"
                 name="partnerId"
                 {...register('partnerId', { required: true })}
-                className="border border-gray-300 p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded w-full text-sm"
               >
                 {
                   partners.map(partner => (
@@ -181,7 +181,7 @@ const TableAccount = () => {
                 id="partnerType"
                 name="partnerType"
                 {...register('partnerType', { required: true })}
-                className="border border-gray-300 p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded w-full text-sm"
               >
                 <option value="new">Nuevo</option>
                 <option value="old">Antiguo</option>
@@ -198,7 +198,7 @@ const TableAccount = () => {
                 type='number'
                 name="quotas"
                 {...register('quotas', { required: true })}
-                className="border border-gray-300 p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded w-full text-sm"
               />
               {errors.quotas && <p className='text-red-500'>El número de cuotas es requerido</p>}
             </div>
@@ -212,13 +212,13 @@ const TableAccount = () => {
                 type="date"
                 name="openingDate"
                 {...register('openingDate', { required: true })}
-                className="border border-gray-300 p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded w-full text-sm"
               />
               {errors.openingDate && <p className='text-red-500'>La fecha de apertura es requerida</p>}
             </div>
             <button
               type="submit"
-              className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
+              className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm"
             >
               Crear cuenta
             </button>

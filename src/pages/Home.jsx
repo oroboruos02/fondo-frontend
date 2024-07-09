@@ -159,7 +159,7 @@ export default function Example() {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link to="/login-client" className="text-sm font-semibold leading-6 text-white mr-4">
+            <Link to="/login-partner" className="text-sm font-semibold leading-6 text-white mr-4">
               Iniciar sesión <span aria-hidden="true">&rarr;</span>
             </Link>
             <Link to="/registerclient" className="text-sm font-semibold leading-6 text-white">
@@ -418,7 +418,7 @@ export default function Example() {
                 </blockquote>
                 <figcaption className="mt-8 text-base">
                   <div className="font-semibold text-white">Yesid Alfonso Anacona</div>
-                  <div className="mt-1 text-gray-400">CEO of Axon Group</div>
+                  <div className="mt-1 text-gray-400">CEO de Axon Group</div>
                 </figcaption>
               </figure>
             </div>

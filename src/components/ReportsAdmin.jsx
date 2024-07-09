@@ -77,7 +77,7 @@ const ReportsAdmin = () => {
       <h1 className="text-2xl font-bold mb-6">Reportes Generales</h1>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-4 shadow rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">ganancia mensual</h2>
+          <h2 className="text-xl font-semibold mb-4">Ganancia mensual</h2>
           <Bar data={barData} />
         </div>
         <div className="bg-white p-4 shadow rounded-lg">

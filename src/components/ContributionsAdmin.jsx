@@ -53,7 +53,7 @@ const ContributionsAdmin = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Aportes Mensuales de Socios</h2>
         <button
-          className="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-black hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm"
           onClick={() => registerContribution()}
         >
           Liberar mes 
@@ -71,7 +71,7 @@ const ContributionsAdmin = () => {
               <th className="px-4 py-2 border">Valor</th>
               <th className="px-4 py-2 border">Mora</th>
               <th className="px-4 py-2 border">Estado</th>
-              <th className="px-4 py-2 border">Cédula de Administrador</th>
+              <th className="px-4 py-2 border">Cédula administrador</th>
               <th className="px-4 py-2 border">Comprobante</th>
               <th className="px-4 py-2 border">Acciones</th>
             </tr>
@@ -79,18 +79,18 @@ const ContributionsAdmin = () => {
           <tbody>
             {contributions.map((contribution, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-sm">
                   {contribution.account?.partner ? `${contribution.account.partner.name} ${contribution.account.partner.lastname}` : 'N/A'}
                 </td>
-                <td className="border px-4 py-2">{contribution.idContribution}</td>
-                <td className="border px-4 py-2">{contribution.accountId}</td>
-                <td className="border px-4 py-2">{dayjs(contribution.paymentDeadline).utc().format("DD/MM/YYYY")}</td>
-                <td className="border px-4 py-2">{contribution.dateOfPayment ? dayjs(contribution.dateOfPayment).utc().format("DD/MM/YYYY") : ''}</td>
-                <td className="border px-4 py-2">{contribution.value}</td>
-                <td className="border px-4 py-2">{contribution.lateness}</td>
-                <td className="border px-4 py-2">{contribution.isPaid ? 'Pagado' : 'No Pagado'}</td>
-                <td className="border px-4 py-2">{contribution.userId}</td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-sm">{contribution.idContribution}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.accountId}</td>
+                <td className="border px-4 py-2 text-sm">{dayjs(contribution.paymentDeadline).utc().format("DD/MM/YYYY")}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.dateOfPayment ? dayjs(contribution.dateOfPayment).utc().format("DD/MM/YYYY") : ''}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.value}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.lateness}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.isPaid ? 'Pagado' : 'No Pagado'}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.userId}</td>
+                <td className="border px-4 py-2 text-sm">
                   {contribution.paymentReceipt.url ? (
                     <img
                       src={contribution.paymentReceipt.url}
@@ -105,7 +105,7 @@ const ContributionsAdmin = () => {
                 <td className="border px-4 py-2">
                   {!contribution.isPaid && (
                     <button
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
                       onClick={() => openApprovalModal(contribution.idContribution)}
                     >
                       Aprobar

@@ -83,15 +83,15 @@ const TableAdmin = () => {
     <div className="p-4">
       <ToastContainer />
       <div className="flex justify-between items-center mb-4">
-        <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded">
+        <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm">
           {isFormVisible ? 'Cancelar' : 'Crear administrador'}
         </button>
         <input
           type="text"
-          placeholder="Buscar por nombre, apellidos, cédula o correo"
+          placeholder="Buscar por nombre, cédula"
           value={searchTerm}
           onChange={handleSearch}
-          className="border border-gray-300 p-2 rounded"
+          className="border border-gray-300 p-2 rounded text-sm"
         />
       </div>
       <div className="overflow-x-auto">
@@ -108,15 +108,15 @@ const TableAdmin = () => {
           <tbody>
             {filteredUsers.map((user, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{user.dni}</td>
-                <td className="border px-4 py-2">{user.name}</td>
-                <td className="border px-4 py-2">{user.lastname}</td>
-                <td className="border px-4 py-2">{user.email}</td>
-                <td className="border px-4 py-2">
-                  <button onClick={() => handleEditUser(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
+                <td className="border px-4 py-2 text-sm">{user.dni}</td>
+                <td className="border px-4 py-2 text-sm">{user.name}</td>
+                <td className="border px-4 py-2 text-sm">{user.lastname}</td>
+                <td className="border px-4 py-2 text-sm">{user.email}</td>
+                <td className="border px-4 py-2 text-sm">
+                  <button onClick={() => handleEditUser(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2 text-sm">
                     Editar
                   </button>
-                  <button onClick={() => handleDeleteUser(index)} className="bg-red-500 text-white px-2 py-1 rounded">
+                  <button onClick={() => handleDeleteUser(index)} className="bg-red-500 text-white px-2 py-1 rounded text-sm">
                     Eliminar
                   </button>
                 </td>
@@ -142,7 +142,7 @@ const TableAdmin = () => {
                   id="dni"
                   name="dni"
                   {...register('dni', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                   disabled={editingUser !== null}
                 />
                 {errors.dni && <p className="text-red-500">La cédula es requerida</p>}
@@ -156,7 +156,7 @@ const TableAdmin = () => {
                   id="name"
                   name="name"
                   {...register('name', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                 />
                 {errors.name && <p className="text-red-500">El nombre es requerido</p>}
               </div>
@@ -171,7 +171,7 @@ const TableAdmin = () => {
                   id="lastname"
                   name="lastname"
                   {...register('lastname', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                 />
                 {errors.lastname && <p className="text-red-500">El apellido es requerido</p>}
               </div>
@@ -184,7 +184,7 @@ const TableAdmin = () => {
                   id="email"
                   name="email"
                   {...register('email', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                 />
                 {errors.email && <p className="text-red-500">El correo electrónico es requerido</p>}
               </div>
@@ -199,14 +199,14 @@ const TableAdmin = () => {
                   id="password"
                   name="password"
                   {...register('password', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                 />
                 {errors.password && <p className="text-red-500">La contraseña es requerida</p>}
               </div>
             </div>
             <button
               type="submit"
-              className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
+              className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm"
             >
               {editingUser !== null ? 'Actualizar administrador' : 'Crear'}
             </button>

@@ -67,23 +67,23 @@ const TableCredit = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded">
+        <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm">
           {isFormVisible ? 'Cancelar' : 'Crear crédito'}
         </button>
         <input
           type="text"
-          placeholder="Buscar por número de crédito, CC, nombre o apellidos"
+          placeholder="Buscar por cedula"
           value={searchTerm}
           onChange={handleSearch}
-          className="border border-gray-300 p-2 rounded"
+          className="border border-gray-300 p-2 rounded text-sm"
         />
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="px-4 py-2 border">Número de Crédito</th>
-              <th className="px-4 py-2 border">Propietario CC</th>
+              <th className="px-4 py-2 border">Número de crédito</th>
+              <th className="px-4 py-2 border">Propietario Cc</th>
               <th className="px-4 py-2 border">Nombre</th>
               <th className="px-4 py-2 border">Apellidos</th>
               <th className="px-4 py-2 border">Acciones</th>
@@ -92,11 +92,11 @@ const TableCredit = () => {
           <tbody>
             {filteredCredits.map((credit, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{credit.numeroCredito}</td>
-                <td className="border px-4 py-2">{credit.propietarioCc}</td>
-                <td className="border px-4 py-2">{credit.nombre}</td>
-                <td className="border px-4 py-2">{credit.apellidos}</td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-sm">{credit.numeroCredito}</td>
+                <td className="border px-4 py-2 text-sm">{credit.propietarioCc}</td>
+                <td className="border px-4 py-2 text-sm">{credit.nombre}</td>
+                <td className="border px-4 py-2 text-sm">{credit.apellidos}</td>
+                <td className="border px-4 py-2 text-sm">
                   <button onClick={() => handleEditCredit(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
                     Editar
                   </button>
@@ -121,7 +121,7 @@ const TableCredit = () => {
                 id="socio"
                 name="socio"
                 {...register('socio', { required: true })}
-                className="border border-gray-300 p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded w-full text-sm"
               >
                 <option value="Juan">Juan</option>
                 <option value="Ana">Ana</option>
@@ -136,7 +136,7 @@ const TableCredit = () => {
                 id="valor"
                 name="valor"
                 {...register('valor', { required: true })}
-                className="border border-gray-300 p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded w-full text-sm"
               >
                 <option value="1000">1000</option>
                 <option value="2000">2000</option>
@@ -151,7 +151,7 @@ const TableCredit = () => {
                 id="fechaDesembolso"
                 name="fechaDesembolso"
                 {...register('fechaDesembolso', { required: true })}
-                className="border border-gray-300 p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded w-full text-sm"
               >
                 <option value="2023-01-01">2023-01-01</option>
                 <option value="2023-02-01">2023-02-01</option>
@@ -166,7 +166,7 @@ const TableCredit = () => {
                 id="interes"
                 name="interes"
                 {...register('interes', { required: true })}
-                className="border border-gray-300 p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded w-full text-sm"
               >
                 <option value="5%">5%</option>
                 <option value="10%">10%</option>
@@ -175,7 +175,7 @@ const TableCredit = () => {
             </div>
             <button
               type="submit"
-              className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
+              className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm"
             >
               {editingCredit !== null ? 'Actualizar crédito' : 'Crear crédito'}
             </button>

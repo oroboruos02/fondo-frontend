@@ -72,7 +72,7 @@ const TableClientes = () => {
     <div className="p-4">
       <ToastContainer />
       <div className="flex justify-between items-center mb-4">
-        <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded">
+        <button onClick={toggleFormVisibility} className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm">
           {isFormVisible ? 'Cancelar' : 'Crear socio'}
         </button>
         <input
@@ -80,7 +80,7 @@ const TableClientes = () => {
           placeholder="Buscar por cédula o nombre"
           value={searchTerm}
           onChange={handleSearch}
-          className="border border-gray-300 p-2 rounded"
+          className="border border-gray-300 p-2 rounded text-sm"
         />
       </div>
       <div className="overflow-x-auto">
@@ -99,17 +99,17 @@ const TableClientes = () => {
           <tbody>
             {filteredClientes.map((partner, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{partner.dni}</td>
-                <td className="border px-4 py-2">{partner.name}</td>
-                <td className="border px-4 py-2">{partner.lastname}</td>
-                <td className="border px-4 py-2">{partner.phoneNumber}</td>
-                <td className="border px-4 py-2">{partner.email}</td>
-                <td className="border px-4 py-2">{partner.address}</td>
-                <td className="border px-4 py-2">
-                  <button onClick={() => handleEditCliente(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
+                <td className="border px-4 py-2 text-sm">{partner.dni}</td>
+                <td className="border px-4 py-2 text-sm">{partner.name}</td>
+                <td className="border px-4 py-2 text-sm">{partner.lastname}</td>
+                <td className="border px-4 py-2 text-sm">{partner.phoneNumber}</td>
+                <td className="border px-4 py-2 text-sm">{partner.email}</td>
+                <td className="border px-4 py-2 text-sm">{partner.address}</td>
+                <td className="border px-4 py-2 text-sm">
+                  <button onClick={() => handleEditCliente(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2 text-sm">
                     Editar
                   </button>
-                  <button onClick={() => handleDeleteCliente(index)} className="bg-red-500 text-white px-2 py-1 rounded">
+                  <button onClick={() => handleDeleteCliente(index)} className="bg-red-500 text-white px-2 py-1 rounded text-sm">
                     Eliminar
                   </button>
                 </td>
@@ -120,7 +120,7 @@ const TableClientes = () => {
       </div>
       {isFormVisible && (
         <div className="mt-4">
-          <h2 className="text-lg font-semibold mb-2">{editingCliente !== null ? 'Editar Socio' : 'Agregar Nuevo Socio'}</h2>
+          <h2 className="text-lg font-semibold mb-2 ">{editingCliente !== null ? 'Editar Socio' : 'Agregar Nuevo Socio'}</h2>
           {registerPartnerErrors.map((error, i) => (
             <p className="text-red-500" key={i}>{error}</p>
           ))}
@@ -135,7 +135,7 @@ const TableClientes = () => {
                   id="dni"
                   name="dni"
                   {...register('dni', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                   disabled={editingCliente !== null}
                 />
                 {errors.dni && <p className="text-red-500">La cédula es requerida</p>}
@@ -149,7 +149,7 @@ const TableClientes = () => {
                   id="name"
                   name="name"
                   {...register('name', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                 />
                 {errors.name && <p className="text-red-500">El nombre es requerido</p>}
               </div>
@@ -164,7 +164,7 @@ const TableClientes = () => {
                   id="lastname"
                   name="lastname"
                   {...register('lastname', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                 />
                 {errors.lastname && <p className="text-red-500">Los apellidos son requeridos</p>}
               </div>
@@ -177,7 +177,7 @@ const TableClientes = () => {
                   id="phoneNumber"
                   name="phoneNumber"
                   {...register('phoneNumber', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                 />
                 {errors.phoneNumber && <p className="text-red-500">El número telefónico es requerido</p>}
               </div>
@@ -192,7 +192,7 @@ const TableClientes = () => {
                   id="email"
                   name="email"
                   {...register('email', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                 />
                 {errors.email && <p className="text-red-500">El correo electrónico es requerido</p>}
               </div>
@@ -205,14 +205,14 @@ const TableClientes = () => {
                   id="address"
                   name="address"
                   {...register('address', { required: true })}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-2 rounded w-full text-sm"
                 />
                 {errors.address && <p className="text-red-500">La dirección es requerida</p>}
               </div>
             </div>
             <button
               type="submit"
-              className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded"
+              className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm"
             >
               {editingCliente !== null ? 'Actualizar' : 'Crear'}
             </button>

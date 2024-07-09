@@ -53,15 +53,15 @@ const DatesDashboardPartner = () => {
           <h2 className="text-xl font-semibold mb-4">Resumen de Inversión</h2>
           <div className="flex flex-col space-y-4">
             <div className="flex justify-between">
-              <span className="font-medium">Total Invertido:</span>
+              <span className="font-medium">Mi inversion total:</span>
               <span>$50,000</span>
             </div>
             <div className="flex justify-between">
-              <span className="font-medium">Rendimiento Total:</span>
+              <span className="font-medium">Mi Rendimiento Total:</span>
               <span>8%</span>
             </div>
             <div className="flex justify-between">
-              <span className="font-medium">Fondos Activos:</span>
+              <span className="font-medium">Mis Fondos Activos:</span>
               <span>$50,000</span>
             </div>
           </div>

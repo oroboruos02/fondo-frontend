@@ -92,21 +92,21 @@ const ContributionsPartner = () => {
           <tbody>
             {myContributions.map((contribution, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{contribution.idContribution}</td>
-                <td className="border px-4 py-2">{contribution.accountId}</td>
-                <td className="border px-4 py-2">{dayjs(contribution.paymentDeadline).utc().format("DD/MM/YYYY")}</td>
-                <td className="border px-4 py-2">{contribution.dateOfPayment ? dayjs(contribution.dateOfPayment).utc().format("DD/MM/YYYY") : ''}</td>
-                <td className="border px-4 py-2">{contribution.value}</td>
-                <td className="border px-4 py-2">{contribution.lateness}</td>
-                <td className="border px-4 py-2">{contribution.isPaid ? 'Pagado' : 'No pagado'}</td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-sm">{contribution.idContribution}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.accountId}</td>
+                <td className="border px-4 py-2 text-sm">{dayjs(contribution.paymentDeadline).utc().format("DD/MM/YYYY")}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.dateOfPayment ? dayjs(contribution.dateOfPayment).utc().format("DD/MM/YYYY") : ''}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.value}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.lateness}</td>
+                <td className="border px-4 py-2 text-sm">{contribution.isPaid ? 'Pagado' : 'No pagado'}</td>
+                <td className="border px-4 py-2 text-sm">
                   {contribution.paymentReceipt?.url ? (
                     <span>Comprobante subido</span>
                   ) : (
                     <span>Comprobante no subido</span>
                   )}
                 </td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-sm">
                   <button
                     className={`bg-${contribution.paymentReceipt?.url ? 'yellow' : 'green'}-500 hover:bg-${contribution.paymentReceipt?.url ? 'yellow' : 'green'}-700 text-white font-bold py-2 px-4 rounded`}
                     onClick={() => {
@@ -117,7 +117,7 @@ const ContributionsPartner = () => {
                       }
                     }}
                   >
-                    {contribution.paymentReceipt?.url ? 'Actualizar Pago' : 'Subir Pago'}
+                    {contribution.paymentReceipt?.url ? 'Actualizar' : 'Subir'}
                   </button>
                 </td>
               </tr>
@@ -128,7 +128,7 @@ const ContributionsPartner = () => {
 
       {showUploadForm && (
         <div className="mt-4 p-4 border rounded bg-gray-100">
-          <h3 className="text-lg font-semibold mb-2">Subir Pago</h3>
+          <h3 className="text-lg font-semibold mb-2">Subir</h3>
           <form onSubmit={onSubmitUpload}>
             <div className="mb-4">
               <label className="block mb-2 text-sm font-bold text-gray-700">
@@ -138,7 +138,7 @@ const ContributionsPartner = () => {
                 type="text"
                 {...register('idContribution')}
                 disabled
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm"
               />
             </div>
             <div className="mb-4">
@@ -149,7 +149,7 @@ const ContributionsPartner = () => {
                 type="date"
                 {...register('paymentDeadline')}
                 disabled
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm"
               />
             </div>
             <div className="mb-4">
@@ -160,7 +160,7 @@ const ContributionsPartner = () => {
                 type="text"
                 {...register('value')}
                 disabled
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm"
               />
             </div>
             <div className="mb-4">
@@ -170,7 +170,7 @@ const ContributionsPartner = () => {
               <input
                 type="date"
                 {...register('dateOfPayment', { required: true })}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm"
               />
               {errors.dateOfPayment && <p className='text-red-500'>La fecha de pago es requerida</p>}
             </div>
@@ -182,7 +182,7 @@ const ContributionsPartner = () => {
                 type="text"
                 {...register('lateness')}
                 disabled
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm"
               />
             </div>
             <div className="mb-4">
@@ -193,13 +193,13 @@ const ContributionsPartner = () => {
                 type="file"
                 accept=".png,.jpg"
                 {...register('image', { required: true })}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm"
               />
               {errors.image && <p className='text-red-500'>El comprobante de pago es requerido</p>}
             </div>
             <button
               type="submit"
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
             >
               Subir
             </button>
@@ -209,7 +209,7 @@ const ContributionsPartner = () => {
 
       {showUpdateForm && (
         <div className="mt-4 p-4 border rounded bg-gray-100">
-          <h3 className="text-lg font-semibold mb-2">Actualizar Pago</h3>
+          <h3 className="text-lg font-semibold mb-2">Actualizar</h3>
           <form onSubmit={onSubmitUpdate}>
             <div className="mb-4">
               <label className="block mb-2 text-sm font-bold text-gray-700">
@@ -219,7 +219,7 @@ const ContributionsPartner = () => {
                 type="text"
                 {...register('idContribution')}
                 disabled
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm"
               />
             </div>
             <div className="mb-4">
@@ -230,13 +230,13 @@ const ContributionsPartner = () => {
                 type="file"
                 accept=".png,.jpg"
                 {...register('image', { required: true })}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm"
               />
               {errors.image && <p className='text-red-500'>El comprobante de pago es requerido</p>}
             </div>
             <button
               type="submit"
-              className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded text-sm"
             >
               Actualizar
             </button>

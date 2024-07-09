@@ -30,30 +30,30 @@ const TableAccountPartner = () => {
           placeholder="Buscar por fecha de apertura"
           value={searchTerm}
           onChange={handleSearch}
-          className="border border-gray-300 p-2 rounded"
+          className="border border-gray-300 p-2 rounded text-sm"
         />
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="px-4 py-2 border">ID Cuenta</th>
+              <th className="px-4 py-2 border">ID cuenta</th>
               <th className="px-4 py-2 border">Cupos</th>
               <th className="px-4 py-2 border">Valor</th>
-              <th className="px-4 py-2 border">Total Inscripción</th>
-              <th className="px-4 py-2 border">Fecha de Apertura</th>
+              <th className="px-4 py-2 border">Total inscripción</th>
+              <th className="px-4 py-2 border">Fecha de apertura</th>
               <th className="px-4 py-2 border">Pagos</th>
             </tr>
           </thead>
           <tbody>
             {filteredAccounts.map((account, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2 text-center">{account.id}</td>
-                <td className="border px-4 py-2 text-center">{account.quotas}</td>
-                <td className="border px-4 py-2 text-center">${account.value}</td>
-                <td className="border px-4 py-2 text-center">${account.initialInvestment}</td>
-                <td className="border px-4 py-2 text-center">{dayjs(account.openingDate).utc().format("DD/MM/YYYY")}</td>
-                <td className="border px-4 py-2 text-center">${account.myPayments}</td>
+                <td className="border px-4 py-2 text-sm">{account.id}</td>
+                <td className="border px-4 py-2 text-sm">{account.quotas}</td>
+                <td className="border px-4 py-2 text-sm">${account.value}</td>
+                <td className="border px-4 py-2 text-sm">${account.initialInvestment}</td>
+                <td className="border px-4 py-2 text-sm">{dayjs(account.openingDate).utc().format("DD/MM/YYYY")}</td>
+                <td className="border px-4 py-2 text-sm">${account.myPayments}</td>
               </tr>
             ))}
           </tbody>
