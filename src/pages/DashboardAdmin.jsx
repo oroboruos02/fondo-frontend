@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react';
 import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems, Transition, TransitionChild } from '@headlessui/react';
-import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, CreditCardIcon, UserPlusIcon, CurrencyDollarIcon, HomeIcon, UsersIcon, XMarkIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, CreditCardIcon, UserPlusIcon, CurrencyDollarIcon, HomeIcon, UsersIcon, XMarkIcon, ShieldCheckIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Link, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import TableAdmin from '../components/TableAdmin'; 
@@ -10,12 +10,14 @@ import DatesDashboard from '../components/DatesDashboard';
 import TableCredit from '../components/TableCredit';
 import ReportsAdmin from '../components/ReportsAdmin';
 import ContributionsAdmin from '../components/ContributionsAdmin';
+import ResetPasswordAdmin from '../components/ResetPasswordAdmin';
 import { useAuthUser } from '../context/AuthUserContext';
 
 const navigation = [
   { name: 'Panel principal', href: '/dashboard-admin/dates-dashboard', icon: HomeIcon, current: true },
   { name: 'Crear Administrador', href: '/dashboard-admin/table-admin', icon: ShieldCheckIcon, current: false },
   { name: 'Crear Socios', href: '/dashboard-admin/table-partner', icon: UsersIcon, current: false },
+  { name: 'Restablecer Contraseñas', href: '/dashboard-admin/reset-password-admin', icon: KeyIcon, current: false },
   { name: 'Crear Cuentas', href: '/dashboard-admin/table-account', icon: UserPlusIcon, current: false },
   { name: 'Aportes', href: '/dashboard-admin/contributions-admin', icon: CurrencyDollarIcon, current: false }, 
   { name: 'Credito', href: '/dashboard-admin/table-credit', icon: CreditCardIcon, current: false }, 
@@ -299,7 +301,7 @@ export default function DashboardAdmin() {
                         </MenuItem>
                         
                       ))} */}
-                      <Link className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-bold')}>Perfil</Link>
+                      <Link to='/dashboard-admin/table-admin' className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-bold')}>Perfil</Link>
                       <Link to='/' onClick={() => {logout()}} className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-bold')}>Cerrar sesión</Link>
                     </MenuItems>
                   </Transition>
@@ -318,6 +320,7 @@ export default function DashboardAdmin() {
               <Route path='table-credit' element={<TableCredit />} />
               <Route path='reports-admin' element={<ReportsAdmin />} />
               <Route path='contributions-admin' element={<ContributionsAdmin />} />
+              <Route path='reset-password-admin' element={<ResetPasswordAdmin />} />
             </Routes>
           </main>
         </div>

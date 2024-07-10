@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react';
 import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems, Transition, TransitionChild } from '@headlessui/react';
-import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, DocumentDuplicateIcon, CurrencyDollarIcon, FolderIcon, HomeIcon, UsersIcon, XMarkIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, DocumentDuplicateIcon, CurrencyDollarIcon, FolderIcon, HomeIcon, UsersIcon, XMarkIcon, UserCircleIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Link, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { useAuthPartner } from '../context/AuthPartnerContext';
@@ -8,10 +8,11 @@ import DatesDashboardPartner from '../components/DatesDashboardPartner';
 import TableAccountPartner from '../components/TableAccountPartner';
 import ReportsPartner from '../components/ReportsPartner';
 import ContributionsPartner from '../components/ContributionsPartner';
+import DataFormPartner from '../components/DataFormPartner';
 
 const navigation = [
   { name: 'Panel principal', href: '/dashboard-partner/dates-dashboard-partner', icon: HomeIcon },
-  { name: 'Mis datos', href: '#', icon: UserCircleIcon },
+  { name: 'Mis datos', href: '/dashboard-partner/data-form-partner', icon: KeyIcon },
   { name: 'Mis aportes', href: '/dashboard-partner/contributions-partner', icon: CurrencyDollarIcon },
   { name: 'Mis cuentas', href: '/dashboard-partner/table-account-partner', icon: FolderIcon },
   { name: 'Reportes', href: '/dashboard-partner/reports-partner', icon: ChartPieIcon },
@@ -280,7 +281,7 @@ export default function DashboardClient() {
                     </MenuButton>
                     <Transition>
                       <MenuItems className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                        <Link className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-bold')}>Perfil</Link>
+                        <Link to= '/dashboard-partner/data-form-partner' className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-bold')}>Perfil</Link>
                         <Link to='/' onClick={() => { logout(); }} className={classNames('block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-bold')}>Cerrar sesión</Link>
                       </MenuItems>
                     </Transition>
@@ -297,6 +298,7 @@ export default function DashboardClient() {
               <Route path="table-account-partner" element={<TableAccountPartner />} />
               <Route path="/reports-partner/*" element={<ReportsPartner />} />
               <Route path="/contributions-partner/*" element={<ContributionsPartner />} />
+              <Route path="/data-form-partner/*" element={<DataFormPartner />} />
             </Routes>
           </main>
         </div>

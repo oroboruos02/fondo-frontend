@@ -15,6 +15,8 @@ const ContributionsPartner = () => {
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [selectedContribution, setSelectedContribution] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
   const { register, handleSubmit, reset, setValue, formState: { errors }, watch } = useForm();
 
   const handleUploadClick = (index) => {
@@ -70,10 +72,22 @@ const ContributionsPartner = () => {
     }
   }, [dateOfPayment, paymentDeadline, value, setValue]);
 
+  const filteredContributions = myContributions.filter(contribution =>
+    contribution.dateOfPayment &&
+    dayjs(contribution.dateOfPayment).utc().format("YYYY-MM-DD").includes(searchTerm)
+  );
+
   return (
     <div className="p-4">
       <ToastContainer />
       <h2 className="text-lg font-semibold mb-4">Aportes Mensuales</h2>
+      <input
+        type="text"
+        placeholder="Buscar por fecha de pago (YYYY-MM-DD)"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="mb-4 p-2 border rounded w-46 text-sm"
+      />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
@@ -90,7 +104,7 @@ const ContributionsPartner = () => {
             </tr>
           </thead>
           <tbody>
-            {myContributions.map((contribution, index) => (
+            {filteredContributions.map((contribution, index) => (
               <tr key={index}>
                 <td className="border px-4 py-2 text-sm">{contribution.idContribution}</td>
                 <td className="border px-4 py-2 text-sm">{contribution.accountId}</td>

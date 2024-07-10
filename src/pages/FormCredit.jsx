@@ -1,29 +1,20 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormCredit = () => {
-  const [formData, setFormData] = useState({
-    amount: '',
-    duration: '',
-    occupation: '',
-  });
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const [darkMode, setDarkMode] = useState(false);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = (data) => {
     // Handle form submission logic here
-    console.log(formData);
+    console.log(data);
+    toast.success('Formulario enviado exitosamente!');
   };
 
   const themeClass = darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-800';
@@ -33,6 +24,7 @@ const FormCredit = () => {
 
   return (
     <div className={`flex min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ${themeClass}`}>
+      <ToastContainer />
       <button
         className="absolute top-4 right-4 focus:outline-none"
         onClick={toggleDarkMode}
@@ -74,7 +66,7 @@ const FormCredit = () => {
             Solicitud de Crédito
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="rounded-md shadow-sm">
             <div className="mb-4">
               <label htmlFor="amount" className="sr-only">
@@ -87,9 +79,9 @@ const FormCredit = () => {
                 required
                 className={`relative block w-full appearance-none rounded-md border px-3 py-2 ${inputClass}`}
                 placeholder="Monto a solicitar"
-                value={formData.amount}
-                onChange={handleChange}
+                {...register('amount', { required: true })}
               />
+              {errors.amount && <p className="text-red-500 text-sm">Este campo es requerido</p>}
             </div>
             <div className="mb-4">
               <label htmlFor="duration" className="sr-only">
@@ -102,9 +94,9 @@ const FormCredit = () => {
                 required
                 className={`relative block w-full appearance-none rounded-md border px-3 py-2 ${inputClass}`}
                 placeholder="Duración del crédito (en meses)"
-                value={formData.duration}
-                onChange={handleChange}
+                {...register('duration', { required: true })}
               />
+              {errors.duration && <p className="text-red-500 text-sm">Este campo es requerido</p>}
             </div>
             <div className="mb-4">
               <label htmlFor="occupation" className="sr-only">
@@ -117,9 +109,39 @@ const FormCredit = () => {
                 required
                 className={`relative block w-full appearance-none rounded-md border px-3 py-2 ${inputClass}`}
                 placeholder="Ocupación"
-                value={formData.occupation}
-                onChange={handleChange}
+                {...register('occupation', { required: true })}
               />
+              {errors.occupation && <p className="text-red-500 text-sm">Este campo es requerido</p>}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="phone" className="sr-only">
+                Celular
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="text"
+                required
+                className={`relative block w-full appearance-none rounded-md border px-3 py-2 ${inputClass}`}
+                placeholder="Celular"
+                {...register('phone', { required: true })}
+              />
+              {errors.phone && <p className="text-red-500 text-sm">Este campo es requerido</p>}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="email" className="sr-only">
+                Dirección de correo
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className={`relative block w-full appearance-none rounded-md border px-3 py-2 ${inputClass}`}
+                placeholder="Dirección de correo"
+                {...register('email', { required: true })}
+              />
+              {errors.email && <p className="text-red-500 text-sm">Este campo es requerido</p>}
             </div>
           </div>
           <div>

@@ -7,7 +7,7 @@ import {ArrowPathIcon,CheckIcon,CloudArrowUpIcon,Cog6ToothIcon,FingerPrintIcon,L
 
 const navigation = [
   { name: '', href: '#' },
-  { name: '', href: '#' },
+  { name: 'Contacto', href: './Contact' },
   { name: '', href: '#' },
   { name: '', href: '#' },
 ]

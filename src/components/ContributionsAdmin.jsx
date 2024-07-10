@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useContribution } from '../context/ContributionContext';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 dayjs.extend(utc);
 
 const ContributionsAdmin = () => {
@@ -48,13 +50,22 @@ const ContributionsAdmin = () => {
     setSelectedContributionId(null);
   };
 
+  const handleRegisterContribution = async () => {
+    await registerContribution();
+    toast.success('Mes liberado con éxito');
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  };
+
   return (
     <div className="p-4">
+      <ToastContainer />
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Aportes Mensuales de Socios</h2>
         <button
           className="bg-black hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm"
-          onClick={() => registerContribution()}
+          onClick={handleRegisterContribution}
         >
           Liberar mes 
         </button>

@@ -18,7 +18,11 @@ import TableClient from './components/TableClient';
 import TableAccount from './components/TableAccount';
 import TableCredit from './components/TableCredit';
 import ReportsAdmin from './components/ReportsAdmin';
+import ResetPasswordAdmin from './components/ResetPasswordAdmin';
+import Contact from './pages/Contact';
 import './App.css';
+
+
 
 // importacion de componentes Partner
 import DatesDashboardPartner from './components/DatesDashboardPartner';
@@ -26,7 +30,9 @@ import TableAccountPartner from './components/TableAccountPartner';
 import ReportsPartner from './components/ReportsPartner';
 import ContributionsPartner from './components/ContributionsPartner';
 import ContributionsAdmin from './components/ContributionsAdmin';
+import DataFormPartner from './components/DataFormPartner';
 import { ContributionProvider } from './context/ContributionContext';
+
 
 import { AuthUserProvider } from './context/AuthUserContext';
 import ProtectedRoutesUser from './ProtectedRoutesUser';
@@ -61,6 +67,8 @@ function App() {
                       <Route element={ <ProtectedRoutesPartner/> }>
                         <Route path="/dashboard-partner/*" element={<DashboardClient />} />
                       </Route>
+
+                      <Route path="/contact" element={<Contact />} />
                       
                       {/* dashboard admin */}
                       <Route path="/form-credit" element={<FormCredit />} />
@@ -71,6 +79,7 @@ function App() {
                       <Route path='/table-credit/*' element={<TableCredit />} />
                       <Route path='/reports-admin/*' element={<ReportsAdmin />} />
                       <Route path='/contributions-admin/*' element={<ContributionsAdmin />} />
+                      <Route path='/reset-password-admin/*' element={<ResetPasswordAdmin />} />
                       <Route path='*' element={<NotFound />}/>
       
                       {/* dashboard partner */}
@@ -78,6 +87,7 @@ function App() {
                       <Route path="/Table-account-partner/*" element={<TableAccountPartner />} />
                       <Route path="/reports-partner/*" element={<ReportsPartner />} />
                       <Route path="/contributions-partner/*" element={<ContributionsPartner />} />
+                      <Route path="/data-form-partner/*" element={<DataFormPartner />} />
                     </Routes>
                   </div>
                 </Router>
