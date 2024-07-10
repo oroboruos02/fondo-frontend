@@ -3,31 +3,24 @@ import { useForm } from 'react-hook-form';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { KeyIcon } from '@heroicons/react/24/solid';
+import { usePartner } from '../context/PartnerContext';
 
 const DataFormPartner = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
+  const { changePassword, errors: changePasswordErrors  } = usePartner();
 
   const onSubmit = async (data) => {
     try {
       // Replace with your API call to change the password
-      const response = await fakeApiChangePassword(data.currentPassword, data.newPassword);
-      toast.success('Contraseña cambiada con éxito');
+      const success = await changePassword(data)
+      if(success){
+        toast.success('Contraseña cambiada con éxito');
+        reset();
+      }
     } catch (error) {
       toast.error('Error al cambiar la contraseña');
     }
-  };
-
-  // Fake API call function to simulate password change
-  const fakeApiChangePassword = (currentPassword, newPassword) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (currentPassword === 'correct-password') {
-          resolve();
-        } else {
-          reject();
-        }
-      }, 1000);
-    });
   };
 
   return (
@@ -37,13 +30,16 @@ const DataFormPartner = () => {
         <KeyIcon className="h-6 w-6 text-gray-700 mr-2" />
         <h2 className="text-lg font-semibold">Cambiar Contraseña</h2>
       </div>
+      {changePasswordErrors.map((error, i) => (
+            <p className="text-red-500" key={i}>{error}</p>
+      ))}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">Contraseña Actual</label>
           <input
-            id="currentPassword"
+            id="password"
             type="password"
-            {...register('currentPassword', { required: 'La contraseña actual es requerida' })}
+            {...register('password', { required: 'La contraseña actual es requerida' })}
             className="border border-gray-300 p-2 rounded w-full text-sm"
           />
           {errors.currentPassword && <p className="text-red-500">{errors.currentPassword.message}</p>}

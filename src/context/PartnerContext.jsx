@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
-import { getPartnersRequest, registerPartnerRequest } from "../api/partner";
+import { changePasswordRequest, getPartnersRequest, registerPartnerRequest, resetPasswordRequest } from "../api/partner";
 
 const PartnerContext = createContext();
 
@@ -43,6 +43,32 @@ export function PartnerProvider ({ children }) {
         }
     }
 
+    const changePassword = async (data) => {
+        try {
+            const res = await changePasswordRequest(data)
+            console.log(res);
+            return true;
+        } catch (error) {
+            if(Array.isArray(error.response.data)) {
+                return setErrors(error.response.data)
+            }
+            setErrors([error.response.data.message])
+        }
+    }
+
+    const resetPassword = async (id) => {
+        try {
+            const res = await resetPasswordRequest(id);
+            console.log(res);
+            return true;
+        } catch (error) {
+            if(Array.isArray(error.response.data)) {
+                return setErrors(error.response.data)
+            }
+            setErrors([error.response.data.message])
+        }
+    }
+
     useEffect(() => {
         if(errors.length > 0) {
             const timer = setTimeout(() => {
@@ -58,7 +84,9 @@ export function PartnerProvider ({ children }) {
             errors,
             setPartners,
             registerPartner,
-            getPartnes
+            getPartnes,
+            changePassword,
+            resetPassword
         }}>
             { children }
         </PartnerContext.Provider>

@@ -9,28 +9,18 @@ const ResetPasswordAdmin = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { partners, getPartnes } = usePartner();
   const [shouldFetchPartners, setShouldFetchPartners] = useState(true);
+  const { resetPassword } = usePartner();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (id) => {
     try {
       // Replace with your API call to reset the password
-      const response = await fakeApiResetPassword(data.partnerId);
-      toast.success('Contraseña restablecida con éxito');
+      const success = await resetPassword(id);
+      if(success){
+        toast.success('Contraseña restablecida con éxito');
+      }
     } catch (error) {
       toast.error('Error al restablecer la contraseña');
     }
-  };
-
-  // Fake API call function to simulate password reset
-  const fakeApiResetPassword = (partnerId) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (partnerId) {
-          resolve();
-        } else {
-          reject();
-        }
-      }, 1000);
-    });
   };
 
   useEffect(() => {
@@ -49,19 +39,22 @@ const ResetPasswordAdmin = () => {
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
-          <label htmlFor="partnerId" className="block text-sm font-medium text-gray-700">Seleccione Socio</label>
-          <input
-            list="partners"
-            id="partnerId"
-            {...register('partnerId', { required: 'El socio es requerido' })}
-            className="border border-gray-300 p-2 rounded w-full text-sm"
-          />
-          <datalist id="partners">
-            {(partners || []).map((partner) => ( // Asegúrate de que partners sea siempre un array
-              <option key={partner.dni} value={partner.dni}>{partner.name} {partner.lastname}</option>
-            ))}
-          </datalist>
-          {errors.partnerId && <p className="text-red-500">{errors.partnerId.message}</p>}
+        <label htmlFor="partnerId" className="block text-sm font-medium text-gray-700">
+                Socio
+              </label>
+              <select
+                id="dni"
+                name="dni"
+                {...register('dni', { required: true })}
+                className="border border-gray-300 p-2 rounded w-full text-sm"
+              >
+                {
+                  partners.map(partner => (
+                    <option key={partner.dni} value={partner.dni}>{partner.name} {partner.lastname}</option>
+                  ))
+                }
+              </select>
+              {errors.partnerId && <p className='text-red-500'>El socio es requerido</p>}
         </div>
         <button type="submit" className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm">Restablecer Contraseña</button>
       </form>

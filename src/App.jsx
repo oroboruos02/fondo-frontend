@@ -22,9 +22,7 @@ import ResetPasswordAdmin from './components/ResetPasswordAdmin';
 import Contact from './pages/Contact';
 import './App.css';
 
-
-
-// importacion de componentes Partner
+// importacion de componentes admin y partner
 import DatesDashboardPartner from './components/DatesDashboardPartner';
 import TableAccountPartner from './components/TableAccountPartner';
 import ReportsPartner from './components/ReportsPartner';
@@ -32,8 +30,6 @@ import ContributionsPartner from './components/ContributionsPartner';
 import ContributionsAdmin from './components/ContributionsAdmin';
 import DataFormPartner from './components/DataFormPartner';
 import { ContributionProvider } from './context/ContributionContext';
-
-
 import { AuthUserProvider } from './context/AuthUserContext';
 import ProtectedRoutesUser from './ProtectedRoutesUser';
 import NotFound from './pages/404NotFound';
@@ -68,6 +64,7 @@ function App() {
                         <Route path="/dashboard-partner/*" element={<DashboardClient />} />
                       </Route>
 
+                      {/* form de contacto */}
                       <Route path="/contact" element={<Contact />} />
                       
                       {/* dashboard admin */}
