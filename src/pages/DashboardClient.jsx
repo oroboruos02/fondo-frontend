@@ -1,6 +1,6 @@
-import { Fragment, useState } from 'react';
-import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems, Transition, TransitionChild } from '@headlessui/react';
-import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, DocumentDuplicateIcon, CurrencyDollarIcon, FolderIcon, HomeIcon, UsersIcon, XMarkIcon, UserCircleIcon, KeyIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { Dialog, DialogPanel, Menu, MenuButton, MenuItems, Transition, TransitionChild } from '@headlessui/react';
+import { Bars3Icon, BellIcon, ChartPieIcon, Cog6ToothIcon, CurrencyDollarIcon, FolderIcon, HomeIcon, XMarkIcon, KeyIcon, CreditCardIcon, BanknotesIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Link, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { useAuthPartner } from '../context/AuthPartnerContext';
@@ -9,12 +9,16 @@ import TableAccountPartner from '../components/TableAccountPartner';
 import ReportsPartner from '../components/ReportsPartner';
 import ContributionsPartner from '../components/ContributionsPartner';
 import DataFormPartner from '../components/DataFormPartner';
+import TableCreditPartner from '../components/TableCreditPartner';
+import ContributionsLoanPartner from '../components/ContributionsLoanPartner';
 
 const navigation = [
   { name: 'Panel principal', href: '/dashboard-partner/dates-dashboard-partner', icon: HomeIcon },
   { name: 'Mis datos', href: '/dashboard-partner/data-form-partner', icon: KeyIcon },
   { name: 'Mis aportes', href: '/dashboard-partner/contributions-partner', icon: CurrencyDollarIcon },
   { name: 'Mis cuentas', href: '/dashboard-partner/table-account-partner', icon: FolderIcon },
+  { name: 'Solicitar crédito', href: '/dashboard-partner/table-credit-partner', icon: CreditCardIcon },
+  { name: 'Pagos de crédito', href: '/dashboard-partner/contributions-loan-partner', icon: BanknotesIcon },
   { name: 'Reportes', href: '/dashboard-partner/reports-partner', icon: ChartPieIcon },
 ];
 
@@ -231,7 +235,7 @@ export default function DashboardClient() {
                       className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-yellow-600"
                       aria-hidden="true"
                     />
-                    Settings
+                    Configuracion
                   </a>
                 </li>
               </ul>
@@ -269,7 +273,7 @@ export default function DashboardClient() {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full bg-gray-50"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src="/icon-user.png"
                         alt=""
                       />
                       <span className="hidden lg:flex lg:items-center">
@@ -299,6 +303,8 @@ export default function DashboardClient() {
               <Route path="/reports-partner/*" element={<ReportsPartner />} />
               <Route path="/contributions-partner/*" element={<ContributionsPartner />} />
               <Route path="/data-form-partner/*" element={<DataFormPartner />} />
+              <Route path="/table-credit-partner/*" element={<TableCreditPartner />} />
+              <Route path="/contributions-loan-partner/*" element={<ContributionsLoanPartner />} />
             </Routes>
           </main>
         </div>

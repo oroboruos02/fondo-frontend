@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
-import { getUsersRequest, registerUserRequest } from "../api/user";
+import { disableUserRequest, getUsersRequest, registerUserRequest } from "../api/user";
 
 const UserContext = createContext();
 
@@ -43,6 +43,17 @@ export function UserProvider ({ children }) {
         }
     }
 
+    const disableUser = async(id) => {
+
+        try {
+            const res= await disableUserRequest(id)
+            console.log(res);
+            return true
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         if(errors.length > 0) {
             const timer = setTimeout(() => {
@@ -58,7 +69,8 @@ export function UserProvider ({ children }) {
             errors,
             setUsers,
             registerUser,
-            getUsers
+            getUsers,
+            disableUser
         }}>
             { children }
         </UserContext.Provider>

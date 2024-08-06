@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import emailjs from 'emailjs-com';
 
 const FormCredit = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -11,10 +12,39 @@ const FormCredit = () => {
     setDarkMode(!darkMode);
   };
 
-  const onSubmit = (data) => {
-    // Handle form submission logic here
-    console.log(data);
-    toast.success('Formulario enviado exitosamente!');
+  const sendEmail = (email, data) => {
+    const emailParams = {
+      ...data,
+      to_email: email,
+      from_name: `${data.firstName} ${data.lastName}`,
+      message: data.message,
+    };
+
+    return emailjs.send('service_lvvniy6', 'template_j99rs8r', emailParams, 'ESapgUh0jfYQ8Nmwi');
+  };
+
+  const onSubmit = async (data) => {
+    const emailList = [
+      'davidalejandroaguilar33@gmail.com',
+      'ivandcl@gmail.com',
+      'aleja.urbano@hotmail.com',
+      'yesid8@gmail.com',
+      'atarabarahona2@gmail.com',
+      'einarrengifo@gmail.com',
+      'yeisoneduardocaicedo95@gmail.com',
+      'arc.eseisnos@gmail.com'
+    ];
+
+    for (const email of emailList) {
+      try {
+        const response = await sendEmail(email, data);
+        console.log('SUCCESS!', response.status, response.text);
+        toast.success(`Formulario enviado exitosamente a ${email}!`);
+      } catch (err) {
+        console.log('FAILED...', err);
+        toast.error(`Error al enviar el formulario a ${email}`);
+      }
+    }
   };
 
   const themeClass = darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-800';
@@ -68,6 +98,36 @@ const FormCredit = () => {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="rounded-md shadow-sm">
+            <div className="mb-4">
+              <label htmlFor="first-name" className="sr-only">
+                Nombre
+              </label>
+              <input
+                id="first-name"
+                name="first-name"
+                type="text"
+                required
+                className={`relative block w-full appearance-none rounded-md border px-3 py-2 ${inputClass}`}
+                placeholder="Nombre"
+                {...register('firstName', { required: true })}
+              />
+              {errors.firstName && <p className="text-red-500 text-sm">Este campo es requerido</p>}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="last-name" className="sr-only">
+                Apellido
+              </label>
+              <input
+                id="last-name"
+                name="last-name"
+                type="text"
+                required
+                className={`relative block w-full appearance-none rounded-md border px-3 py-2 ${inputClass}`}
+                placeholder="Apellido"
+                {...register('lastName', { required: true })}
+              />
+              {errors.lastName && <p className="text-red-500 text-sm">Este campo es requerido</p>}
+            </div>
             <div className="mb-4">
               <label htmlFor="amount" className="sr-only">
                 Monto a solicitar
@@ -142,6 +202,20 @@ const FormCredit = () => {
                 {...register('email', { required: true })}
               />
               {errors.email && <p className="text-red-500 text-sm">Este campo es requerido</p>}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="message" className="sr-only">
+                Mensaje
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows="4"
+                className={`relative block w-full appearance-none rounded-md border px-3 py-2 ${inputClass}`}
+                placeholder="Mensaje"
+                {...register('message', { required: true })}
+              />
+              {errors.message && <p className="text-red-500 text-sm">Este campo es requerido</p>}
             </div>
           </div>
           <div>

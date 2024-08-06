@@ -1,17 +1,20 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { usePartner } from '../context/PartnerContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const TableClientes = () => {
-  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
-  const { partners, getPartnes, setPartners, registerPartner, errors: registerPartnerErrors } = usePartner();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const { partners, getPartnes, setPartners, registerPartner, errors: registerPartnerErrors, disablePartner } = usePartner();
   const [shouldFetchPartners, setShouldFetchPartners] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [editingCliente, setEditingCliente] = useState(null);
+  const [editingCliente] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState(null);
+  const formRef = useRef(null); // Referencia al formulario
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -25,24 +28,29 @@ const TableClientes = () => {
       partner.dni.includes(searchTerm)
   );
 
-  const handleEditCliente = (index) => {
-    const clienteToEdit = partners[index];
-    setValue('dni', clienteToEdit.dni);
-    setValue('name', clienteToEdit.name);
-    setValue('lastname', clienteToEdit.lastname);
-    setValue('phoneNumber', clienteToEdit.phoneNumber);
-    setValue('email', clienteToEdit.email);
-    setValue('address', clienteToEdit.address);
-    setEditingCliente(index);
-    setIsFormVisible(true);
+  const handleDeleteCliente = async () => {
+    const success = await disablePartner(selectedClientId);
+    if(success) {
+      setIsDeleteModalOpen(false);
+      toast.success('Socio desactivado con éxito');
+      setShouldFetchPartners(true);
+    }
   };
 
-  const handleDeleteCliente = (index) => {
-    setPartners(partners.filter((_, i) => i !== index));
+  const openDeleteModal = (clientId) => {
+    setSelectedClientId(clientId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
+    if (!isFormVisible) {
+      scrollFormIntoView(); // Llamar a la función para hacer scroll al formulario
+    }
   };
 
   const onSubmit = handleSubmit(async (partner) => {
@@ -61,12 +69,24 @@ const TableClientes = () => {
     }
   });
 
+  const scrollFormIntoView = () => {
+    formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   useEffect(() => {
     if (shouldFetchPartners) {
       getPartnes();
       setShouldFetchPartners(false);
     }
-  }, [shouldFetchPartners, partners]);
+  }, [shouldFetchPartners, getPartnes]);
+
+  const clientesPerPage = 5;
+  const totalPages = Math.ceil(filteredClientes.length / clientesPerPage);
+  const displayedClientes = filteredClientes.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="p-4">
@@ -97,7 +117,7 @@ const TableClientes = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredClientes.map((partner, index) => (
+            {displayedClientes.map((partner, index) => (
               <tr key={index}>
                 <td className="border px-4 py-2 text-sm">{partner.dni}</td>
                 <td className="border px-4 py-2 text-sm">{partner.name}</td>
@@ -106,18 +126,39 @@ const TableClientes = () => {
                 <td className="border px-4 py-2 text-sm">{partner.email}</td>
                 <td className="border px-4 py-2 text-sm">{partner.address}</td>
                 <td className="border px-4 py-2 text-sm">
-                  <button onClick={() => handleEditCliente(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2 text-sm">
-                    Editar
-                  </button>
-                  <button onClick={() => handleDeleteCliente(index)} className="bg-red-500 text-white px-2 py-1 rounded text-sm">
-                    Eliminar
-                  </button>
+                  {partner.isActive && (
+                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                    <button onClick={() => openDeleteModal(partner.dni)} className="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-700 transition duration-300 ease-in-out">
+                      Desactivar
+                    </button>
+                  </div>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        <div className="flex justify-between mt-4">
+          <button
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          <button
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Siguiente
+          </button>
+        </div>
+        <div className="text-center mt-2">
+          Página {currentPage} de {totalPages}
+        </div>
       </div>
+      <div ref={formRef} /> {/* Referencia al formulario para hacer scroll */}
       {isFormVisible && (
         <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2 ">{editingCliente !== null ? 'Editar Socio' : 'Agregar Nuevo Socio'}</h2>
@@ -217,6 +258,28 @@ const TableClientes = () => {
               {editingCliente !== null ? 'Actualizar' : 'Crear'}
             </button>
           </form>
+        </div>
+      )}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6">
+            <h2 className="text-lg font-semibold mb-4">Confirmar Eliminación</h2>
+            <p>¿Estás seguro de que deseas desactivar este socio?</p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={closeDeleteModal}
+                className="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded mr-2"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDeleteCliente}
+                className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
+              >
+                Desactivar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

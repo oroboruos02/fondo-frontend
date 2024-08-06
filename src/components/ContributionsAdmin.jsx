@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useContribution } from '../context/ContributionContext';
 import dayjs from 'dayjs';
@@ -12,8 +11,11 @@ const ContributionsAdmin = () => {
   const [shouldFetchContributions, setShouldFetchContributions] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageUrl, setModalImageUrl] = useState('');
-  const [isApprovalModalOpen, setIsApprovalModalOpen] = useState(false); // Nuevo estado para el modal de aprobación
-  const [selectedContributionId, setSelectedContributionId] = useState(null); // Nuevo estado para el ID de la contribución seleccionada
+  const [isApprovalModalOpen, setIsApprovalModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [selectedContributionId, setSelectedContributionId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (shouldFetchContributions) {
@@ -27,6 +29,7 @@ const ContributionsAdmin = () => {
       await approveContribution(selectedContributionId);
       setShouldFetchContributions(true);
       closeApprovalModal();
+      toast.success('Pago aprobado con éxito');
     }
   };
 
@@ -50,13 +53,44 @@ const ContributionsAdmin = () => {
     setSelectedContributionId(null);
   };
 
+  const openRegisterModal = () => {
+    setIsRegisterModalOpen(true);
+  };
+
+  const closeRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+  };
+
   const handleRegisterContribution = async () => {
     await registerContribution();
+    closeRegisterModal();
     toast.success('Mes liberado con éxito');
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+    setShouldFetchContributions(true);
   };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
+
+  const filteredContributions = contributions.filter(contribution => 
+    contribution.account?.partner?.name.toLowerCase().includes(searchTerm) || 
+    contribution.account?.partner?.lastname.toLowerCase().includes(searchTerm)
+  );
+
+  const clientesPerPage = 10;
+  const totalPages = Math.ceil(filteredContributions.length / clientesPerPage);
+  const displayedContributions = filteredContributions.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Formateador de números para monedas
+  const currencyFormatter = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 2,
+  });
 
   return (
     <div className="p-4">
@@ -65,16 +99,25 @@ const ContributionsAdmin = () => {
         <h2 className="text-lg font-semibold">Aportes Mensuales de Socios</h2>
         <button
           className="bg-black hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm"
-          onClick={handleRegisterContribution}
+          onClick={openRegisterModal}
         >
           Liberar mes 
         </button>
+      </div>
+      <div className="mb-4">
+        <input 
+          type="text"
+          placeholder="Buscar por nombre de socio"
+          value={searchTerm}
+          onChange={handleSearch}
+          className="border border-gray-300 p-2 rounded w-full text-sm"
+        />
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="px-4 py-2 border">Socio</th>
+              <th className="px-4 py-2 border">Nombre Socio</th>
               <th className="px-4 py-2 border">Recibo</th>
               <th className="px-4 py-2 border">Nro Cuenta</th>
               <th className="px-4 py-2 border">Fecha Límite de Pago</th>
@@ -88,8 +131,8 @@ const ContributionsAdmin = () => {
             </tr>
           </thead>
           <tbody>
-            {contributions.map((contribution, index) => (
-              <tr key={index}>
+            {displayedContributions.map((contribution, index) => (
+              <tr key={index} className={`${dayjs().isAfter(dayjs(contribution.paymentDeadline)) ? 'bg-red-300' : ''}`}>
                 <td className="border px-4 py-2 text-sm">
                   {contribution.account?.partner ? `${contribution.account.partner.name} ${contribution.account.partner.lastname}` : 'N/A'}
                 </td>
@@ -97,8 +140,8 @@ const ContributionsAdmin = () => {
                 <td className="border px-4 py-2 text-sm">{contribution.accountId}</td>
                 <td className="border px-4 py-2 text-sm">{dayjs(contribution.paymentDeadline).utc().format("DD/MM/YYYY")}</td>
                 <td className="border px-4 py-2 text-sm">{contribution.dateOfPayment ? dayjs(contribution.dateOfPayment).utc().format("DD/MM/YYYY") : ''}</td>
-                <td className="border px-4 py-2 text-sm">{contribution.value}</td>
-                <td className="border px-4 py-2 text-sm">{contribution.lateness}</td>
+                <td className="border px-4 py-2 text-sm">{currencyFormatter.format(contribution.value)}</td>
+                <td className="border px-4 py-2 text-sm">{currencyFormatter.format(contribution.lateness)}</td>
                 <td className="border px-4 py-2 text-sm">{contribution.isPaid ? 'Pagado' : 'No Pagado'}</td>
                 <td className="border px-4 py-2 text-sm">{contribution.userId}</td>
                 <td className="border px-4 py-2 text-sm">
@@ -116,7 +159,7 @@ const ContributionsAdmin = () => {
                 <td className="border px-4 py-2">
                   {!contribution.isPaid && (
                     <button
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
+                      className="bg-green-500 hover:bg-green-700 text-white py-1 px-4 rounded text-sm"
                       onClick={() => openApprovalModal(contribution.idContribution)}
                     >
                       Aprobar
@@ -127,6 +170,25 @@ const ContributionsAdmin = () => {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-between mt-4">
+          <button
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          <button
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Siguiente
+          </button>
+        </div>
+        <div className="text-center mt-2">
+          Página {currentPage} de {totalPages}
+        </div>
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -149,6 +211,22 @@ const ContributionsAdmin = () => {
               </button>
               <button onClick={handleApprovePayment} className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">
                 Aprobar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isRegisterModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6">
+            <h2 className="text-xl font-bold mb-4">Confirmar Liberación de Mes</h2>
+            <p className="mb-4">¿Está seguro de que desea liberar este mes?</p>
+            <div className="flex justify-end">
+              <button onClick={closeRegisterModal} className="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded mr-2">
+                Cancelar
+              </button>
+              <button onClick={handleRegisterContribution} className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">
+                Liberar Mes
               </button>
             </div>
           </div>

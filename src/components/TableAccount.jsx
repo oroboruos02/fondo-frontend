@@ -21,18 +21,19 @@ const TableAccount = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAccountId, setSelectedAccountId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
   const filteredAccounts = accounts.filter((account) => {
-    const partnerId = account.partner.dni ? account.partner.dni.toString().toLowerCase() : '';
-    const partnerName = account.partner.name && account.partner.lastname 
+    const partnerDni = account.partner?.dni ? account.partner.dni.toString().toLowerCase() : '';
+    const partnerName = account.partner?.name && account.partner?.lastname 
       ? `${account.partner.name.toLowerCase()} ${account.partner.lastname.toLowerCase()}` 
       : '';
     return (
-      partnerId.includes(searchTerm.toLowerCase()) ||
+      partnerDni.includes(searchTerm.toLowerCase()) ||
       partnerName.includes(searchTerm.toLowerCase())
     );
   });
@@ -88,7 +89,17 @@ const TableAccount = () => {
       getPartnes();
       setShouldFetchPartners(false);
     }
-  }, [shouldFetchPartners]);
+  }, [shouldFetchPartners, getAccounts, getPartnes]);
+
+  const clientesPerPage = 5;
+  const totalPages = Math.ceil(filteredAccounts.length / clientesPerPage);
+  const displayedAccounts = filteredAccounts.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const currencyFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' });
 
   return (
     <div className="p-4">
@@ -122,21 +133,21 @@ const TableAccount = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredAccounts.map((account, index) => (
+            {displayedAccounts.map((account, index) => (
               <tr key={index}>
                 <td className="border px-4 py-2 text-sm">{account.id}</td>
-                <td className="border px-4 py-2 text-sm">{account.partner.dni}</td>
-                <td className="border px-4 py-2 text-sm">{account.partner.name} {account.partner.lastname}</td>
+                <td className="border px-4 py-2 text-sm">{account.partner?.dni || 'N/A'}</td>
+                <td className="border px-4 py-2 text-sm">{account.partner ? `${account.partner.name} ${account.partner.lastname}` : 'N/A'}</td>
                 <td className="border px-4 py-2 text-sm">{account.quotas}</td>
-                <td className="border px-4 py-2 text-sm">{account.value}</td>
-                <td className="border px-4 py-2 text-sm">{account.initialInvestment}</td>
+                <td className="border px-4 py-2 text-sm">{currencyFormatter.format(account.value)}</td>
+                <td className="border px-4 py-2 text-sm">{currencyFormatter.format(account.initialInvestment)}</td>
                 <td className="border px-4 py-2 text-sm">{dayjs(account.openingDate).utc().format("DD/MM/YYYY")}</td>
-                <td className="border px-4 py-2 text-sm">{account.myPayments}</td>
+                <td className="border px-4 py-2 text-sm">{currencyFormatter.format(account.myPayments)}</td>
                 <td className="border px-4 py-2 text-sm">{account.isActive ? 'Sí' : 'No'}</td>
                 <td className="border px-4 py-2 text-sm">
                   {account.isActive && (
                     <button
-                      className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
+                      className="bg-red-500 hover:bg-red-700 text-white px-4 py-1 rounded"
                       onClick={() => openModal(account.id)}
                     >
                       Desactivar
@@ -147,6 +158,25 @@ const TableAccount = () => {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-between mt-4">
+          <button
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          <button
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Siguiente
+          </button>
+        </div>
+        <div className="text-center mt-2">
+          Página {currentPage} de {totalPages}
+        </div>
       </div>
       {isFormVisible && (
         <div className="mt-4">
@@ -156,6 +186,7 @@ const TableAccount = () => {
           ))}
           <form onSubmit={onSubmit}>
             <div className="mb-4">
+            <div className="w-1/3 pr-2">
               <label htmlFor="partnerId" className="block text-sm font-medium text-gray-700">
                 Socio
               </label>
@@ -173,7 +204,9 @@ const TableAccount = () => {
               </select>
               {errors.partnerId && <p className='text-red-500'>El socio es requerido</p>}
             </div>
+            </div>
             <div className="mb-4">
+            <div className="w-1/3 pr-2">
               <label htmlFor="partnerType" className="block text-sm font-medium text-gray-700">
                 Tipo de Socio
               </label>
@@ -188,8 +221,9 @@ const TableAccount = () => {
               </select>
               {errors.partnerType && <p className='text-red-500'>El tipo de socio es requerido</p>}
             </div>
-
+            </div>
             <div className="mb-4">
+            <div className="w-1/3 pr-2">
               <label htmlFor="quotas" className="block text-sm font-medium text-gray-700">
                 Número de Cuotas
               </label>
@@ -202,8 +236,9 @@ const TableAccount = () => {
               />
               {errors.quotas && <p className='text-red-500'>El número de cuotas es requerido</p>}
             </div>
-
+            </div>
             <div className="mb-4">
+            <div className="w-1/3 pr-2">
               <label htmlFor="openingDate" className="block text-sm font-medium text-gray-700">
                 Fecha de Apertura
               </label>
@@ -215,6 +250,7 @@ const TableAccount = () => {
                 className="border border-gray-300 p-2 rounded w-full text-sm"
               />
               {errors.openingDate && <p className='text-red-500'>La fecha de apertura es requerida</p>}
+            </div>
             </div>
             <button
               type="submit"
@@ -234,7 +270,7 @@ const TableAccount = () => {
       >
         <div className="bg-white rounded-lg p-6">
           <h2 className="text-xl font-bold mb-4">Confirmar Desactivación</h2>
-          <p className="mb-4">¿Está seguro de que desea desactivar esta cuenta?</p>
+          <p className="mb-4">¿Está seguro de que desea desactivar este cupo?</p>
           <div className="flex justify-end">
             <button onClick={closeModal} className="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded mr-2">
               Cancelar

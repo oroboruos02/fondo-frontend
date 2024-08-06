@@ -48,7 +48,7 @@ const tiers = [
     name: 'Capitum: Innovación y Seguridad en Inversiones Estratégicas',
     id: 'global-growth-fund',
     href: '#',
-    imageUrl: '/section3.jpg',
+    imageUrl: '/14.png',
     priceMonthly: '',
     description: "Capitum es un fondo de inversión líder, especializado en ofrecer soluciones financieras innovadoras y seguras para maximizar el valor del capital de nuestros socios. Nuestro enfoque se basa en un análisis exhaustivo y estrategias diversificadas que abarcan préstamos de capital, inversiones en acciones y empresas de software con modelos de facturación recurrente (SAAS). Con un equipo de expertos altamente capacitados.",
     features: [
@@ -60,7 +60,7 @@ const tiers = [
     name: 'Capitum: Tu Socio de Confianza en el Crecimiento Financiero',
     id: 'passive-income-fund',
     href: '#',
-    imageUrl: '/section6.jpg',
+    imageUrl: '/15.png',
     priceMonthly: '',
     description: 'En Capitum, entendemos que cada inversión es un paso importante hacia el éxito financiero. Por ello, ofrecemos una gama de servicios diseñados para satisfacer las necesidades de nuestros socios, incluyendo préstamos de capital para empresas emergentes, inversiones estratégicas en acciones y apoyo a empresas de software SAAS. Nuestro compromiso con la transparencia y el asesoramiento personalizado nos distingue, brindando a nuestros inversores no solo oportunidades de crecimiento, sino también la confianza y el respaldo de un equipo dedicado a alcanzar sus objetivos financieros a largo plazo.',
     features: [
@@ -214,7 +214,7 @@ export default function Example() {
         {/* Hero section */}
         <div className="relative isolate overflow-hidden bg-gray-900 pb-16 pt-14 sm:pb-20">
   <img
-    src="./banner.jpg"
+    src="./1.svg"
     alt=""
     className="absolute inset-0 -z-10 h-full w-full object-cover"
   />
@@ -335,7 +335,7 @@ export default function Example() {
           <div className="relative overflow-hidden pt-16">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <img
-                src="./section.jpg"
+                src="./6.svg"
                 alt="App screenshot"
                 className="mb-[-12%] rounded-xl shadow-2xl ring-1 ring-gray-900/10"
                 width={2432}
@@ -379,7 +379,7 @@ export default function Example() {
               <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-auto">
                 <img
                   className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover shadow-2xl"
-                  src="./section2.jpg"
+                  src="./9.svg"
                   alt=""
                 />
               </div>

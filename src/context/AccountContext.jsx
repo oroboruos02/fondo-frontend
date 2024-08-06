@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { getAccountsPartnerRequest, getAccountsRequest, registerAccountRequest, disableAccountRequest } from "../api/account";
+import { getAccountsPartnerRequest, getAccountsRequest, registerAccountRequest, disableAccountRequest, getTotalInvestmentRequest, getTotalRequest } from "../api/account";
 
 const AccountContext = createContext();
 
@@ -19,6 +19,8 @@ export function AccountProvider ({ children }) {
     const [errors, setErrors] = useState([]);
     const [accounts, setAccounts] = useState([]);
     const [myAccounts, setMyaccounts] = useState([])
+    const [totalInvestment, setTotalInvestment] = useState([])
+    const [total, setTotal] = useState([])
 
     const getAccounts = async () => {
         try {
@@ -60,7 +62,27 @@ export function AccountProvider ({ children }) {
         }catch (error){
         console.log(error)
         }
+    }
+
+    const getTotalInvestment = async() => {
+
+        try {
+            const res = await getTotalInvestmentRequest()
+            setTotalInvestment(res.data)
+        } catch (error) {
+            console.log(error);
         }
+    }
+
+    const getTotal = async() => {
+
+        try {
+            const res = await getTotalRequest()
+            setTotal(res.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
         if(errors.length > 0) {
@@ -76,10 +98,14 @@ export function AccountProvider ({ children }) {
             accounts,
             myAccounts,
             errors,
+            totalInvestment,
+            total,
             getAccounts,
             getMyAccountsPartner,
             registerAccount,
             disableAccount,
+            getTotalInvestment,
+            getTotal
         }}>
             { children }
         </AccountContext.Provider>

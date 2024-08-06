@@ -1,19 +1,21 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useUser } from '../context/UserContext';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const TableAdmin = () => {
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { users, getUsers, registerUser, errors: registerUserErrors } = useUser();
+  const { users, getUsers, registerUser, disableUser, errors: registerUserErrors } = useUser();
   const [shouldFetchUsers, setShouldFetchUsers] = useState(true);
 
   const [editingUser, setEditingUser] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const formRef = useRef(null); // Referencia al formulario
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -27,37 +29,28 @@ const TableAdmin = () => {
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleCreateUser = (data) => {
-    setUsers([...users, data]);
-    reset();
-    setIsFormVisible(false);
-    toast.success('Administrador creado con éxito');
-  };
-
   const handleUpdateUser = (data) => {
-    const updatedUsers = users.map((user, index) => (index === editingUser ? data : user));
-    setUsers(updatedUsers);
+    // Implementa la lógica para actualizar un usuario existente
     reset();
     setEditingUser(null);
     setIsFormVisible(false);
   };
 
-  const handleEditUser = (index) => {
-    const userToEdit = users[index];
-    setValue('dni', userToEdit.dni);
-    setValue('name', userToEdit.name);
-    setValue('lastname', userToEdit.lastname);
-    setValue('email', userToEdit.email);
-    setEditingUser(index);
-    setIsFormVisible(true);
-  };
-
-  const handleDeleteUser = (index) => {
-    setUsers(users.filter((_, i) => i !== index));
+  const handleDeleteUser = async () => {
+    // Implementa la lógica para eliminar un usuario
+    const success = await disableUser(selectedUserId)
+    if(success){ 
+      toast.success('Admistrador inhabilitado con éxito');
+      setIsDeleteModalOpen(false);
+      setShouldFetchUsers(true);
+    }
   };
 
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
+    if (!isFormVisible) {
+      scrollFormIntoView(); // Llamar a la función para hacer scroll al formulario
+    }
   };
 
   const onSubmit = handleSubmit(async (user) => {
@@ -68,16 +61,30 @@ const TableAdmin = () => {
       if (success) {
         setShouldFetchUsers(true);
         toast.success('Administrador creado con éxito');
+        reset()
       }
     }
   });
+
+  const scrollFormIntoView = () => {
+    formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const openDeleteModal = (userId) => {
+    setSelectedUserId(userId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   useEffect(() => {
     if (shouldFetchUsers) {
       getUsers();
       setShouldFetchUsers(false);
     }
-  }, [shouldFetchUsers]);
+  }, [shouldFetchUsers, getUsers]);
 
   return (
     <div className="p-4">
@@ -113,18 +120,20 @@ const TableAdmin = () => {
                 <td className="border px-4 py-2 text-sm">{user.lastname}</td>
                 <td className="border px-4 py-2 text-sm">{user.email}</td>
                 <td className="border px-4 py-2 text-sm">
-                  <button onClick={() => handleEditUser(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2 text-sm">
-                    Editar
-                  </button>
-                  <button onClick={() => handleDeleteUser(index)} className="bg-red-500 text-white px-2 py-1 rounded text-sm">
-                    Eliminar
-                  </button>
+                  {user.isActive && (
+                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                    <button onClick={() => openDeleteModal(user.dni)} className="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-700 transition duration-300 ease-in-out">
+                      Desactivar
+                    </button>
+                  </div>  
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <div ref={formRef} /> {/* Referencia al formulario para hacer scroll */}
       {isFormVisible && (
         <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2">{editingUser !== null ? 'Editar Usuario' : 'Agregar Nuevo Administrador'}</h2>
@@ -134,7 +143,7 @@ const TableAdmin = () => {
           <form onSubmit={onSubmit}>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
-                <label htmlFor="cedula" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="dni" className="block text-sm font-medium text-gray-700">
                   Cédula
                 </label>
                 <input
@@ -148,7 +157,7 @@ const TableAdmin = () => {
                 {errors.dni && <p className="text-red-500">La cédula es requerida</p>}
               </div>
               <div className="w-1/2 pl-2">
-                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                   Nombre
                 </label>
                 <input
@@ -163,7 +172,7 @@ const TableAdmin = () => {
             </div>
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
-                <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
                   Apellidos
                 </label>
                 <input
@@ -176,7 +185,7 @@ const TableAdmin = () => {
                 {errors.lastname && <p className="text-red-500">El apellido es requerido</p>}
               </div>
               <div className="w-1/2 pl-2">
-                <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Correo
                 </label>
                 <input
@@ -191,7 +200,7 @@ const TableAdmin = () => {
             </div>
             <div className="flex mb-4">
               <div className="w-full">
-                <label htmlFor="contrasena" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Contraseña
                 </label>
                 <input
@@ -211,6 +220,23 @@ const TableAdmin = () => {
               {editingUser !== null ? 'Actualizar administrador' : 'Crear'}
             </button>
           </form>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6">
+            <h2 className="text-lg font-semibold">Confirmar Eliminación</h2>
+            <p>¿Estás seguro de que deseas desactivar este Administrador?</p>
+            <div className="flex justify-end">
+              <button onClick={closeDeleteModal} className="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded mr-2">
+                Cancelar
+              </button>
+              <button onClick={handleDeleteUser} className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded">
+                Desactivar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

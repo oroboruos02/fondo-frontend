@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { useAccount } from '../context/AccountContext';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, Title, Tooltip, Legend);
 
 const DatesDashboardPartner = () => {
+
+  const { getTotalInvestment, totalInvestment } = useAccount();
+
+  // Currency formatter for Colombian Pesos
+  const currencyFormatter = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+  });
+
   const barData = {
     labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
     datasets: [
@@ -44,6 +55,10 @@ const DatesDashboardPartner = () => {
     },
   };
 
+  useEffect(() => {
+    getTotalInvestment();
+  }, []);
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-center">Panel del Socio</h1>
@@ -53,8 +68,8 @@ const DatesDashboardPartner = () => {
           <h2 className="text-xl font-semibold mb-4">Resumen de Inversión</h2>
           <div className="flex flex-col space-y-4">
             <div className="flex justify-between">
-              <span className="font-medium">Mi inversion total:</span>
-              <span>$50,000</span>
+              <span className="font-medium">Mi inversión total:</span>
+              <span>{currencyFormatter.format(totalInvestment.totalInvestment)}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-medium">Mi Rendimiento Total:</span>
@@ -62,7 +77,7 @@ const DatesDashboardPartner = () => {
             </div>
             <div className="flex justify-between">
               <span className="font-medium">Mis Fondos Activos:</span>
-              <span>$50,000</span>
+              <span>{currencyFormatter.format(50000)}</span>
             </div>
           </div>
         </div>

@@ -22,6 +22,10 @@ const TableAccountPartner = () => {
     getMyAccountsPartner();
   }, []);
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(value);
+  };
+
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
@@ -50,10 +54,10 @@ const TableAccountPartner = () => {
               <tr key={index}>
                 <td className="border px-4 py-2 text-sm">{account.id}</td>
                 <td className="border px-4 py-2 text-sm">{account.quotas}</td>
-                <td className="border px-4 py-2 text-sm">${account.value}</td>
-                <td className="border px-4 py-2 text-sm">${account.initialInvestment}</td>
+                <td className="border px-4 py-2 text-sm">{formatCurrency(account.value)}</td>
+                <td className="border px-4 py-2 text-sm">{formatCurrency(account.initialInvestment)}</td>
                 <td className="border px-4 py-2 text-sm">{dayjs(account.openingDate).utc().format("DD/MM/YYYY")}</td>
-                <td className="border px-4 py-2 text-sm">${account.myPayments}</td>
+                <td className="border px-4 py-2 text-sm">{formatCurrency(account.myPayments)}</td>
               </tr>
             ))}
           </tbody>

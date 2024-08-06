@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useContribution } from '../context/ContributionContext';
@@ -16,6 +15,7 @@ const ContributionsPartner = () => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [selectedContribution, setSelectedContribution] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { register, handleSubmit, reset, setValue, formState: { errors }, watch } = useForm();
 
@@ -77,6 +77,18 @@ const ContributionsPartner = () => {
     dayjs(contribution.dateOfPayment).utc().format("YYYY-MM-DD").includes(searchTerm)
   );
 
+  const clientesPerPage = 10;
+  const totalPages = Math.ceil(myContributions.length / clientesPerPage);
+  const displayedmyContributions = myContributions.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(value);
+  };
+
   return (
     <div className="p-4">
       <ToastContainer />
@@ -104,14 +116,14 @@ const ContributionsPartner = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredContributions.map((contribution, index) => (
-              <tr key={index}>
+            {displayedmyContributions.map((contribution, index) => (
+              <tr key={index} className={`${dayjs().isAfter(dayjs(contribution.paymentDeadline)) ? 'bg-red-300' : ''} `}>
                 <td className="border px-4 py-2 text-sm">{contribution.idContribution}</td>
                 <td className="border px-4 py-2 text-sm">{contribution.accountId}</td>
                 <td className="border px-4 py-2 text-sm">{dayjs(contribution.paymentDeadline).utc().format("DD/MM/YYYY")}</td>
                 <td className="border px-4 py-2 text-sm">{contribution.dateOfPayment ? dayjs(contribution.dateOfPayment).utc().format("DD/MM/YYYY") : ''}</td>
-                <td className="border px-4 py-2 text-sm">{contribution.value}</td>
-                <td className="border px-4 py-2 text-sm">{contribution.lateness}</td>
+                <td className="border px-4 py-2 text-sm">{formatCurrency(contribution.value)}</td>
+                <td className="border px-4 py-2 text-sm">{formatCurrency(contribution.lateness)}</td>
                 <td className="border px-4 py-2 text-sm">{contribution.isPaid ? 'Pagado' : 'No pagado'}</td>
                 <td className="border px-4 py-2 text-sm">
                   {contribution.paymentReceipt?.url ? (
@@ -121,23 +133,44 @@ const ContributionsPartner = () => {
                   )}
                 </td>
                 <td className="border px-4 py-2 text-sm">
-                  <button
-                    className={`bg-${contribution.paymentReceipt?.url ? 'yellow' : 'green'}-500 hover:bg-${contribution.paymentReceipt?.url ? 'yellow' : 'green'}-700 text-white font-bold py-2 px-4 rounded`}
-                    onClick={() => {
-                      if (contribution.paymentReceipt?.url) {
-                        handleUpdateClick(index);
-                      } else {
-                        handleUploadClick(index);
-                      }
-                    }}
-                  >
-                    {contribution.paymentReceipt?.url ? 'Actualizar' : 'Subir'}
-                  </button>
+                  {!contribution.isPaid && (
+                    <button
+                      className={`bg-${contribution.paymentReceipt?.url ? 'yellow' : 'green'}-500 hover:bg-${contribution.paymentReceipt?.url ? 'yellow' : 'green'}-700 text-white py-1 px-4 rounded`}
+                      onClick={() => {
+                        if (contribution.paymentReceipt?.url) {
+                          handleUpdateClick(index);
+                        } else {
+                          handleUploadClick(index);
+                        }
+                      }}
+                    >
+                      {contribution.paymentReceipt?.url ? 'Actualizar' : 'Subir'}
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        <div className="flex justify-between mt-4">
+          <button
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          <button
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Siguiente
+          </button>
+        </div>
+        <div className="text-center mt-2">
+          Página {currentPage} de {totalPages}
+        </div>
       </div>
 
       {showUploadForm && (
@@ -257,7 +290,6 @@ const ContributionsPartner = () => {
           </form>
         </div>
       )}
-      <ToastContainer />
     </div>
   );
 };

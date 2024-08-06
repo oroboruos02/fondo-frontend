@@ -1,7 +1,7 @@
-import { Fragment, useState } from 'react';
-import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems, Transition, TransitionChild } from '@headlessui/react';
-import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, CreditCardIcon, UserPlusIcon, CurrencyDollarIcon, HomeIcon, UsersIcon, XMarkIcon, ShieldCheckIcon, KeyIcon } from '@heroicons/react/24/outline';
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { useState } from 'react';
+import { Dialog, DialogPanel, Menu, MenuButton, MenuItems, Transition, TransitionChild } from '@headlessui/react';
+import { Bars3Icon, BellIcon, ChartPieIcon, Cog6ToothIcon, CreditCardIcon, UserPlusIcon, CurrencyDollarIcon, HomeIcon, UsersIcon, XMarkIcon, ShieldCheckIcon, KeyIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Link, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import TableAdmin from '../components/TableAdmin'; 
 import TableClient from '../components/TableClient'; 
@@ -11,16 +11,18 @@ import TableCredit from '../components/TableCredit';
 import ReportsAdmin from '../components/ReportsAdmin';
 import ContributionsAdmin from '../components/ContributionsAdmin';
 import ResetPasswordAdmin from '../components/ResetPasswordAdmin';
+import CreditPaymentAdmin from '../components/CreditPaymentAdmin';
 import { useAuthUser } from '../context/AuthUserContext';
 
 const navigation = [
   { name: 'Panel principal', href: '/dashboard-admin/dates-dashboard', icon: HomeIcon, current: true },
   { name: 'Crear Administrador', href: '/dashboard-admin/table-admin', icon: ShieldCheckIcon, current: false },
-  { name: 'Crear Socios', href: '/dashboard-admin/table-partner', icon: UsersIcon, current: false },
+  { name: 'Crear Socio', href: '/dashboard-admin/table-partner', icon: UsersIcon, current: false },
   { name: 'Restablecer Contraseñas', href: '/dashboard-admin/reset-password-admin', icon: KeyIcon, current: false },
-  { name: 'Crear Cuentas', href: '/dashboard-admin/table-account', icon: UserPlusIcon, current: false },
+  { name: 'Crear cuentas', href: '/dashboard-admin/table-account', icon: UserPlusIcon, current: false },
   { name: 'Aportes', href: '/dashboard-admin/contributions-admin', icon: CurrencyDollarIcon, current: false }, 
-  { name: 'Credito', href: '/dashboard-admin/table-credit', icon: CreditCardIcon, current: false }, 
+  { name: 'Crédito', href: '/dashboard-admin/table-credit', icon: CreditCardIcon, current: false }, 
+  { name: 'Aprobar pagos de crédito', href: '/dashboard-admin/credit-payment-admin', icon: CheckCircleIcon, current: false }, 
   { name: 'Reportes', href: '/dashboard-admin/reports-admin', icon: ChartPieIcon, current: false },
 ];
 
@@ -152,7 +154,7 @@ export default function DashboardAdmin() {
                               className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-yellow-600"
                               aria-hidden="true"
                             />
-                            Settings
+                            Configuraciones
                           </a>
                         </li>
                       </ul>
@@ -235,7 +237,7 @@ export default function DashboardAdmin() {
                       className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-yellow-600"
                       aria-hidden="true"
                     />
-                    Settings
+                    Configuracion
                   </a>
                 </li>
               </ul>
@@ -277,7 +279,7 @@ export default function DashboardAdmin() {
                     <span className="sr-only">Open user menu</span>
                     <img
                       className="h-8 w-8 rounded-full bg-gray-50"
-                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&q=80"
+                      src="/icon-admin5.png"
                       alt=""
                     />
                     <span className="hidden lg:flex lg:items-center">
@@ -321,6 +323,7 @@ export default function DashboardAdmin() {
               <Route path='reports-admin' element={<ReportsAdmin />} />
               <Route path='contributions-admin' element={<ContributionsAdmin />} />
               <Route path='reset-password-admin' element={<ResetPasswordAdmin />} />
+              <Route path='/credit-payment-admin/*' element={<CreditPaymentAdmin />} />
             </Routes>
           </main>
         </div>

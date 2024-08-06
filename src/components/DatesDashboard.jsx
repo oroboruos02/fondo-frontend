@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import {Chart as ChartJS,CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,} from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { useAccount } from '../context/AccountContext';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const DatesDashboard = () => {
+
+  const { getTotal, total } = useAccount();
+  console.log(total)
+
   const data = {
     labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
     datasets: [
@@ -31,6 +36,20 @@ const DatesDashboard = () => {
     },
   };
 
+  // Currency formatter for Colombian Pesos
+  const currencyFormatter = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+  });
+
+  const totalInvertido = 130000000;
+  const fondosActivos = 130000000;
+
+  useEffect(() => {
+    getTotal();
+  }, []);
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-center">Panel del Administrador</h1>
@@ -41,15 +60,19 @@ const DatesDashboard = () => {
           <div className="flex flex-col space-y-4">
             <div className="flex justify-between">
               <span className="font-medium">Total Invertido:</span>
-              <span>$130,000,000</span>
+              <span>{currencyFormatter.format(total.total)}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-medium">Total de Inversionistas:</span>
-              <span>50</span>
+              <span>{total.totalPartners}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Total de Cuentas:</span>
+              <span>{total.totalAccounts}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-medium">Fondos Activos:</span>
-              <span>130,000,000</span>
+              <span>{currencyFormatter.format(fondosActivos)}</span>
             </div>
           </div>
         </div>
