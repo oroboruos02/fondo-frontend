@@ -80,7 +80,7 @@ const TableClientes = () => {
     }
   }, [shouldFetchPartners, getPartnes]);
 
-  const clientesPerPage = 5;
+  const clientesPerPage = 10;
   const totalPages = Math.ceil(filteredClientes.length / clientesPerPage);
   const displayedClientes = filteredClientes.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
 

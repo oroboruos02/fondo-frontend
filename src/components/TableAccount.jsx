@@ -91,7 +91,7 @@ const TableAccount = () => {
     }
   }, [shouldFetchPartners, getAccounts, getPartnes]);
 
-  const clientesPerPage = 5;
+  const clientesPerPage = 10;
   const totalPages = Math.ceil(filteredAccounts.length / clientesPerPage);
   const displayedAccounts = filteredAccounts.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
 

@@ -53,15 +53,23 @@ const CreditPaymentAdmin = () => {
   };
 
   const clientesPerPage = 5;
-  const totalPages = Math.ceil(payments.length / clientesPerPage);
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments.filter((payment) => {
     const partnerName = payment.loan && payment.loan.partner ? `${payment.loan.partner.name} ${payment.loan.partner.lastname}`.toLowerCase() : '';
     const loanId = payment.loanId.toString();
     return partnerName.includes(searchTerm.toLowerCase()) || loanId.includes(searchTerm);
   });
 
-  const displayedPayments = filteredPayments.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
+  // Ordenar los pagos por la fecha de pago en orden descendente
+  const sortedPayments = filteredPayments.sort((a, b) => {
+    if (!a.dateOfPayment) return 1;
+    if (!b.dateOfPayment) return -1;
+    return dayjs(b.dateOfPayment).diff(dayjs(a.dateOfPayment));
+  });
+
+  const totalPages = Math.ceil(sortedPayments.length / clientesPerPage);
+
+  const displayedPayments = sortedPayments.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -106,7 +114,7 @@ const CreditPaymentAdmin = () => {
           </thead>
           <tbody>
             {displayedPayments.map((payment, index) => (
-              <tr key={index} className={`${dayjs().isAfter(dayjs(payment.paymentDeadline)) ? 'bg-red-300' : ''} `}>
+              <tr key={index} className={`${!payment.isPaid ? 'bg-red-300' : ''}`}>
                 <td className="border px-4 py-2 text-sm">
                   {payment.loan && payment.loan.partner ? `${payment.loan.partner.name} ${payment.loan.partner.lastname}` : 'Socio no encontrado'}
                 </td>

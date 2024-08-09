@@ -72,14 +72,21 @@ const ContributionsAdmin = () => {
     setSearchTerm(e.target.value.toLowerCase());
   };
 
-  const filteredContributions = contributions.filter(contribution => 
-    contribution.account?.partner?.name.toLowerCase().includes(searchTerm) || 
+  const filteredContributions = contributions.filter(contribution =>
+    contribution.account?.partner?.name.toLowerCase().includes(searchTerm) ||
     contribution.account?.partner?.lastname.toLowerCase().includes(searchTerm)
   );
 
+  // Sort contributions by dateOfPayment in descending order
+  const sortedContributions = filteredContributions.sort((a, b) => {
+    if (!a.dateOfPayment) return 1;
+    if (!b.dateOfPayment) return -1;
+    return dayjs(b.dateOfPayment).diff(dayjs(a.dateOfPayment));
+  });
+
   const clientesPerPage = 10;
-  const totalPages = Math.ceil(filteredContributions.length / clientesPerPage);
-  const displayedContributions = filteredContributions.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
+  const totalPages = Math.ceil(sortedContributions.length / clientesPerPage);
+  const displayedContributions = sortedContributions.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -101,11 +108,11 @@ const ContributionsAdmin = () => {
           className="bg-black hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm"
           onClick={openRegisterModal}
         >
-          Liberar mes 
+          Liberar mes
         </button>
       </div>
       <div className="mb-4">
-        <input 
+        <input
           type="text"
           placeholder="Buscar por nombre de socio"
           value={searchTerm}
@@ -132,9 +139,16 @@ const ContributionsAdmin = () => {
           </thead>
           <tbody>
             {displayedContributions.map((contribution, index) => (
-              <tr key={index} className={`${dayjs().isAfter(dayjs(contribution.paymentDeadline)) ? 'bg-red-300' : ''}`}>
+              <tr
+                key={index}
+                className={`${
+                  !contribution.isPaid ? 'bg-red-300' : ''
+                }`}
+              >
                 <td className="border px-4 py-2 text-sm">
-                  {contribution.account?.partner ? `${contribution.account.partner.name} ${contribution.account.partner.lastname}` : 'N/A'}
+                  {contribution.account?.partner
+                    ? `${contribution.account.partner.name} ${contribution.account.partner.lastname}`
+                    : 'N/A'}
                 </td>
                 <td className="border px-4 py-2 text-sm">{contribution.idContribution}</td>
                 <td className="border px-4 py-2 text-sm">{contribution.accountId}</td>
@@ -172,14 +186,18 @@ const ContributionsAdmin = () => {
         </table>
         <div className="flex justify-between mt-4">
           <button
-            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${
+              currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
             Anterior
           </button>
           <button
-            className={`bg-black text-white px-4 py-2 rounded text-sm ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`bg-black text-white px-4 py-2 rounded text-sm ${
+              currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >

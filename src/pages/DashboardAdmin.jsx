@@ -12,10 +12,12 @@ import ReportsAdmin from '../components/ReportsAdmin';
 import ContributionsAdmin from '../components/ContributionsAdmin';
 import ResetPasswordAdmin from '../components/ResetPasswordAdmin';
 import CreditPaymentAdmin from '../components/CreditPaymentAdmin';
+import DataFormAdmin from '../components/DataFormAdmin';
 import { useAuthUser } from '../context/AuthUserContext';
 
 const navigation = [
   { name: 'Panel principal', href: '/dashboard-admin/dates-dashboard', icon: HomeIcon, current: true },
+  { name: 'Mis datos', href: '/dashboard-admin/data-form-admin', icon: ChartPieIcon, current: false },
   { name: 'Crear Administrador', href: '/dashboard-admin/table-admin', icon: ShieldCheckIcon, current: false },
   { name: 'Crear Socio', href: '/dashboard-admin/table-partner', icon: UsersIcon, current: false },
   { name: 'Restablecer Contraseñas', href: '/dashboard-admin/reset-password-admin', icon: KeyIcon, current: false },
@@ -324,6 +326,7 @@ export default function DashboardAdmin() {
               <Route path='contributions-admin' element={<ContributionsAdmin />} />
               <Route path='reset-password-admin' element={<ResetPasswordAdmin />} />
               <Route path='/credit-payment-admin/*' element={<CreditPaymentAdmin />} />
+              <Route path='/data-form-admin/*' element={<DataFormAdmin />} />
             </Routes>
           </main>
         </div>

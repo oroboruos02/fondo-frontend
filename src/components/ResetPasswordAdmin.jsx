@@ -4,47 +4,77 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { KeyIcon } from '@heroicons/react/24/solid';
 import { usePartner } from '../context/PartnerContext';
+import { useUser } from '../context/UserContext';
 
 const ResetPasswordAdmin = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
   const { partners, getPartnes, resetPassword } = usePartner();
-  const [shouldFetchPartners, setShouldFetchPartners] = useState(true);
+  const { users, getUsers, resetPassword: resetPasswordUser } = useUser();
   const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
-  const [selectedDni, setSelectedDni] = useState('');
+  const [selectedPartnerDni, setSelectedPartnerDni] = useState('');
+  const [selectedAdminDni, setSelectedAdminDni] = useState('');
 
+  // Fetch partners and users once on component mount
   useEffect(() => {
-    if (shouldFetchPartners) {
-      getPartnes();
-      setShouldFetchPartners(false);
-    }
-  }, [shouldFetchPartners, getPartnes]);
+    getPartnes();
+    getUsers();
+  }, []);
 
-  const handleOpenModal = (data, type) => {
-    setSelectedDni(data.dni);
-    if (type === 'partner') {
-      setIsPartnerModalOpen(true);
-    } else {
-      setIsAdminModalOpen(true);
-    }
+  // Partner form management
+  const {
+    register: registerPartner,
+    handleSubmit: handleSubmitPartner,
+    formState: { errors: errorsPartner },
+  } = useForm();
+
+  // Admin form management
+  const {
+    register: registerAdmin,
+    handleSubmit: handleSubmitAdmin,
+    formState: { errors: errorsAdmin },
+  } = useForm();
+
+  // Function to open partner modal
+  const handleOpenPartnerModal = (data) => {
+    setSelectedPartnerDni(data.dni);
+    setIsPartnerModalOpen(true);
   };
 
-  const handleResetPassword = async (type) => {
+  // Function to open admin modal
+  const handleOpenAdminModal = (data) => {
+    setSelectedAdminDni(data.dniAdmin);
+    setIsAdminModalOpen(true);
+  };
+
+  // Function to reset partner password
+  const handleResetPassword = async () => {
     try {
-      const success = await resetPassword({ dni: selectedDni });
+      const success = await resetPassword({ dni: selectedPartnerDni });
       if (success) {
-        toast.success(`Contraseña ${type === 'partner' ? 'del socio' : 'del administrador'} restablecida con éxito`);
+        toast.success('Contraseña del socio restablecida con éxito');
       } else {
-        toast.error(`Error al restablecer la contraseña ${type === 'partner' ? 'del socio' : 'del administrador'}`);
+        toast.error('Error al restablecer la contraseña del socio');
       }
     } catch (error) {
-      toast.error(`Error al restablecer la contraseña ${type === 'partner' ? 'del socio' : 'del administrador'}`);
+      toast.error('Error al restablecer la contraseña del socio');
     }
-    if (type === 'partner') {
-      setIsPartnerModalOpen(false);
-    } else {
-      setIsAdminModalOpen(false);
+    setIsPartnerModalOpen(false);
+  };
+
+  // Function to reset admin password
+  const handleResetAdminPassword = async () => {
+    
+    try {
+      const success = await resetPasswordUser({ dni: selectedAdminDni });
+      if (success) {
+        toast.success('Contraseña del administrador restablecida con éxito');
+      } else {
+        toast.error('Error al restablecer la contraseña del administrador');
+      }
+    } catch (error) {
+      toast.error('Error al restablecer la contraseña del administrador');
     }
+    setIsAdminModalOpen(false);
   };
 
   return (
@@ -57,15 +87,15 @@ const ResetPasswordAdmin = () => {
           <KeyIcon className="h-6 w-6 text-gray-700 mr-2" />
           <h2 className="text-lg font-semibold">Restablecer Contraseña de Socios</h2>
         </div>
-        <form onSubmit={handleSubmit(data => handleOpenModal(data, 'partner'))}>
+        <form onSubmit={handleSubmitPartner(handleOpenPartnerModal)}>
           <div className="mb-4">
             <label htmlFor="dni" className="block text-sm font-medium text-gray-700">Socio</label>
-            <select id="dni" name="dni" {...register('dni', { required: true })} className="border border-gray-300 p-2 rounded w-full text-sm">
+            <select id="dni" {...registerPartner('dni', { required: true })} className="border border-gray-300 p-2 rounded w-full text-sm">
               {partners.map(partner => (
                 <option key={partner.dni} value={partner.dni}>{partner.name} {partner.lastname}</option>
               ))}
             </select>
-            {errors.dni && <p className="text-red-500">El socio es requerido</p>}
+            {errorsPartner.dni && <p className="text-red-500">El socio es requerido</p>}
           </div>
           <button type="submit" className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm">Restablecer Contraseña</button>
         </form>
@@ -78,7 +108,7 @@ const ResetPasswordAdmin = () => {
             <p className="mb-4">¿Está seguro de que desea restablecer la contraseña del socio seleccionado?</p>
             <div className="flex justify-end">
               <button onClick={() => setIsPartnerModalOpen(false)} className="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded mr-2">Cancelar</button>
-              <button onClick={() => handleResetPassword('partner')} className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded">Restablecer</button>
+              <button onClick={handleResetPassword} className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded">Restablecer</button>
             </div>
           </div>
         </div>
@@ -90,15 +120,15 @@ const ResetPasswordAdmin = () => {
           <KeyIcon className="h-6 w-6 text-gray-700 mr-2" />
           <h2 className="text-lg font-semibold">Restablecer Contraseña de Administradores</h2>
         </div>
-        <form onSubmit={handleSubmit(data => handleOpenModal(data, 'admin'))}>
+        <form onSubmit={handleSubmitAdmin(handleOpenAdminModal)}>
           <div className="mb-4">
             <label htmlFor="dniAdmin" className="block text-sm font-medium text-gray-700">Administrador</label>
-            <select id="dniAdmin" name="dniAdmin" {...register('dniAdmin', { required: true })} className="border border-gray-300 p-2 rounded w-full text-sm">
-              {partners.map(partner => (
-                <option key={partner.dni} value={partner.dni}>{partner.name} {partner.lastname}</option>
+            <select id="dniAdmin" {...registerAdmin('dniAdmin', { required: true })} className="border border-gray-300 p-2 rounded w-full text-sm">
+              {users.map(admin => (
+                <option key={admin.dni} value={admin.dni}>{admin.name} {admin.lastname}</option>
               ))}
             </select>
-            {errors.dniAdmin && <p className="text-red-500">El administrador es requerido</p>}
+            {errorsAdmin.dniAdmin && <p className="text-red-500">El administrador es requerido</p>}
           </div>
           <button type="submit" className="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm">Restablecer Contraseña</button>
         </form>
@@ -111,7 +141,7 @@ const ResetPasswordAdmin = () => {
             <p className="mb-4">¿Está seguro de que desea restablecer la contraseña del administrador seleccionado?</p>
             <div className="flex justify-end">
               <button onClick={() => setIsAdminModalOpen(false)} className="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded mr-2">Cancelar</button>
-              <button onClick={() => handleResetPassword('admin')} className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded">Restablecer</button>
+              <button onClick={handleResetAdminPassword} className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded">Restablecer</button>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { BuildingOffice2Icon, EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import emailjs from '@emailjs/browser';
+import ReCAPTCHA from 'react-google-recaptcha'; // Importar el componente de reCAPTCHA
 
 export default function Contact() {
   const form = useRef();
@@ -9,8 +10,9 @@ export default function Contact() {
     user_email: '',
     message: ''
   });
-  const [messageSent, setMessageSent] = useState(false); // Estado para manejar el mensaje de confirmación
-  const [validationError, setValidationError] = useState(''); // Estado para manejar el mensaje de error
+  const [messageSent, setMessageSent] = useState(false);
+  const [validationError, setValidationError] = useState('');
+  const [recaptchaValue, setRecaptchaValue] = useState(null); // Estado para almacenar el valor de reCAPTCHA
 
   const sendEmail = (e) => {
     e.preventDefault();
@@ -18,6 +20,11 @@ export default function Contact() {
     // Validación de campos
     if (!formData.user_name || !formData.user_email || !formData.message) {
       setValidationError('Por favor, complete todos los campos antes de enviar.');
+      return;
+    }
+
+    if (!recaptchaValue) {
+      setValidationError('Por favor, completa el reCAPTCHA.');
       return;
     }
 
@@ -30,14 +37,13 @@ export default function Contact() {
       .then(
         () => {
           console.log('SUCCESS!');
-          setMessageSent(true); // Mostrar el mensaje de éxito
-          // Limpiar los campos del formulario
+          setMessageSent(true);
           setFormData({
             user_name: '',
             user_email: '',
             message: ''
           });
-          // Ocultar el mensaje de éxito después de 5 segundos
+          setRecaptchaValue(null); // Reiniciar el valor de reCAPTCHA
           setTimeout(() => setMessageSent(false), 5000);
         },
         (error) => {
@@ -49,6 +55,10 @@ export default function Contact() {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleRecaptchaChange = (value) => {
+    setRecaptchaValue(value); // Actualizar el estado con el valor de reCAPTCHA
   };
 
   return (
@@ -89,7 +99,7 @@ export default function Contact() {
                   <BuildingOffice2Icon className="h-7 w-6 text-gray-400" aria-hidden="true" />
                 </dt>
                 <dd>
-                Carrera 16D # 155A 06
+                  Carrera 16D # 155A 06
                   <br />
                   Bogotá-Colombia
                 </dd>
@@ -123,7 +133,7 @@ export default function Contact() {
                 </dt>
                 <dd>
                   <a className="hover:text-gray-900" href="mailto:teknesoluciones2@gmail.com">
-                  yesid8@gmail.com
+                    yesid8@gmail.com
                   </a>
                 </dd>
               </div>
@@ -182,12 +192,15 @@ export default function Contact() {
               </div>
             </div>
 
-
-            {validationError && ( // Mostrar el mensaje de error de validación
+            {validationError && (
               <div className="mt-2 text-sm text-red-600">{validationError}</div>
             )}
 
-
+            <ReCAPTCHA
+              sitekey="6Lcd5SAqAAAAAHEND7CrsZ4V1sZ2THCuWwLx2QOC" // Reemplaza con tu clave de sitio de reCAPTCHA
+              onChange={handleRecaptchaChange}
+              className="mt-4"
+            />
 
             <div className="mt-8 flex justify-end">
               <button
@@ -197,7 +210,7 @@ export default function Contact() {
                 Enviar Mensaje
               </button>
             </div>
-            {messageSent && ( // Mostrar el mensaje de confirmación si el mensaje fue enviado
+            {messageSent && (
               <div className="mt-4 text-sm text-green-600">
                 ¡Mensaje enviado con éxito!
               </div>

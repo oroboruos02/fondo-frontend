@@ -77,9 +77,16 @@ const ContributionsPartner = () => {
     dayjs(contribution.dateOfPayment).utc().format("YYYY-MM-DD").includes(searchTerm)
   );
 
+  // Ordenar las contribuciones por la fecha de pago en orden descendente
+  const sortedContributions = filteredContributions.sort((a, b) => {
+    if (!a.dateOfPayment) return 1;
+    if (!b.dateOfPayment) return -1;
+    return dayjs(b.dateOfPayment).diff(dayjs(a.dateOfPayment));
+  });
+
   const clientesPerPage = 10;
-  const totalPages = Math.ceil(myContributions.length / clientesPerPage);
-  const displayedmyContributions = myContributions.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
+  const totalPages = Math.ceil(sortedContributions.length / clientesPerPage);
+  const displayedContributions = sortedContributions.slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -116,8 +123,8 @@ const ContributionsPartner = () => {
             </tr>
           </thead>
           <tbody>
-            {displayedmyContributions.map((contribution, index) => (
-              <tr key={index} className={`${dayjs().isAfter(dayjs(contribution.paymentDeadline)) ? 'bg-red-300' : ''} `}>
+            {displayedContributions.map((contribution, index) => (
+              <tr key={index} className={`${!contribution.isPaid ? 'bg-red-300' : ''} `}>
                 <td className="border px-4 py-2 text-sm">{contribution.idContribution}</td>
                 <td className="border px-4 py-2 text-sm">{contribution.accountId}</td>
                 <td className="border px-4 py-2 text-sm">{dayjs(contribution.paymentDeadline).utc().format("DD/MM/YYYY")}</td>
@@ -127,9 +134,9 @@ const ContributionsPartner = () => {
                 <td className="border px-4 py-2 text-sm">{contribution.isPaid ? 'Pagado' : 'No pagado'}</td>
                 <td className="border px-4 py-2 text-sm">
                   {contribution.paymentReceipt?.url ? (
-                    <span>Comprobante subido</span>
+                    <span>Subido</span>
                   ) : (
-                    <span>Comprobante no subido</span>
+                    <span>No subido</span>
                   )}
                 </td>
                 <td className="border px-4 py-2 text-sm">

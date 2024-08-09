@@ -174,12 +174,19 @@ const TableCredit = () => {
   }, [shouldFetchPartners, getPartnes]);
 
   const clientesPerPage = 10;
-  const totalPages = Math.ceil(loans.length / clientesPerPage);
-  const displayedLoans = loans.filter((credit) => 
-    credit.id.toString().includes(searchTerm) ||
-    credit.partner.dni.includes(searchTerm) ||
-    `${credit.partner.name} ${credit.partner.lastname}`.toLowerCase().includes(searchTerm.toLowerCase())
-  ).slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
+
+  // Ordenar los créditos por la fecha de solicitud en orden descendente
+  const sortedLoans = loans.sort((a, b) => dayjs(b.applicationDate).diff(dayjs(a.applicationDate)));
+
+  const totalPages = Math.ceil(sortedLoans.length / clientesPerPage);
+
+  const displayedLoans = sortedLoans
+    .filter((credit) => 
+      credit.id.toString().includes(searchTerm) ||
+      credit.partner.dni.includes(searchTerm) ||
+      `${credit.partner.name} ${credit.partner.lastname}`.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .slice((currentPage - 1) * clientesPerPage, currentPage * clientesPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

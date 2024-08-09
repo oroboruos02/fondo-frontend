@@ -21,6 +21,7 @@ import ReportsAdmin from './components/ReportsAdmin';
 import ResetPasswordAdmin from './components/ResetPasswordAdmin';
 import TableCreditPartner from './components/TableCreditPartner';
 import CreditPaymentAdmin from './components/CreditPaymentAdmin';
+import DataFormAdmin from './components/DataFormAdmin';
 import Contact from './pages/Contact';
 import './App.css';
 
@@ -85,6 +86,7 @@ function App() {
                           <Route path='/contributions-admin/*' element={<ContributionsAdmin />} />
                           <Route path='/reset-password-admin/*' element={<ResetPasswordAdmin />} />
                           <Route path='/credit-payment-admin/*' element={<CreditPaymentAdmin />} />
+                          <Route path='/data-form-admin/*' element={<DataFormAdmin />} />
                           <Route path='*' element={<NotFound />}/>
           
                           {/* dashboard partner */}
