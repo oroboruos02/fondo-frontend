@@ -153,9 +153,9 @@ export default function Example() {
             <Link to="/login-partner" className="text-sm font-semibold leading-6 text-white mr-4">
               Iniciar sesión <span aria-hidden="true">&rarr;</span>
             </Link>
-            <Link to="/registerclient" className="text-sm font-semibold leading-6 text-white">
+            {/* <Link to="/registerclient" className="text-sm font-semibold leading-6 text-white">
               Crea tu cuenta <span aria-hidden="true">&rarr;</span>
-            </Link>
+            </Link> */}
           </div>
         </nav>
         <Dialog className="lg:hidden" open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)}>
@@ -197,13 +197,13 @@ export default function Example() {
                   >
                     Iniciar sesión
                   </Link>
-                  <Link
+                  {/* <Link
                     to="/registerclient"
                     className="-mx-3 mt-4 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Crea tu cuenta
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </div>
