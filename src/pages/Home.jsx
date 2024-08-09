@@ -14,7 +14,7 @@ const navigation = [
 const features = [
   {
     name: 'Préstamo de Capital.',
-    description: 'Ofrecemos préstamos de capital a empresas con alto potencial de crecimiento, ayudándoles a expandir sus operaciones y a mejorar su rendimiento financiero. Nuestro enfoque se centra en analizar minuciosamente cada oportunidad para garantizar que nuestros préstamos generen retornos consistentes y seguros.',
+    description: 'Ofrecemos préstamos de capital con facilidad a nuestros socios, tambien a personas externas y empresas. Nuestro enfoque se centra en analizar minuciosamente cada oportunidad para garantizar que nuestros préstamos generen retornos consistentes y seguros.',
     icon: CloudArrowUpIcon,
   },
   {
@@ -89,26 +89,16 @@ const faqs = [
 ]
 const footerNavigation = {
   solutions: [
-    { name: 'Marketing', href: '#' },
-    { name: 'Analitica', href: '#' },
-    { name: 'Comercio', href: '#' },
-    { name: 'Perspectivas', href: '#' },
+    
   ],
   support: [
-    { name: 'Precios', href: '#' },
-    { name: 'Documentacion', href: '#' },
-    { name: 'Guias', href: '#' },
-    { name: 'Estado', href: '#' },
+    
   ],
   company: [
     { name: 'Acerca de', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Trabajos', href: '#' },
-    { name: 'Prensa', href: '#' },
     { name: 'Socios', href: '#' },
   ],
   legal: [
-    { name: 'Afirmar', href: '#' },
     { name: 'Privacidad', href: '#' },
     { name: 'Terminos', href: '#' },
   ],
@@ -387,7 +377,7 @@ export default function Example() {
   </p>
 </div>
 <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600">
-  En Capitum, nos especializamos en ofrecer oportunidades de inversión sólidas y rentables en tres áreas clave: préstamos de capital, inversiones en acciones, e inversiones en empresas de software con facturación recurrente (SAAS). Nuestro compromiso es ayudarte a alcanzar tus objetivos financieros con estrategias personalizadas y asesoramiento experto.
+En Capitum, nos especializamos en ofrecer oportunidades de inversión sólidas y rentables en tres áreas clave: préstamos de capital, inversiones en acciones, e inversiones en empresas de software con facturación recurrente (SAAS). Nuestro compromiso es lograr los objetivos financieros con estrategias de rendimientos a largo plazo.
 </p>
 <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
   {tiers.map((tier, tierIdx) => (
@@ -506,7 +496,7 @@ export default function Example() {
             <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                  <h3 className="text-sm font-semibold leading-6 text-white">Soluciones</h3>
+                  <h3 className="text-sm font-semibold leading-6 text-white"></h3>
                   <ul role="list" className="mt-6 space-y-4">
                     {footerNavigation.solutions.map((item) => (
                       <li key={item.name}>
@@ -516,7 +506,7 @@ export default function Example() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </div> 
                 <div className="mt-10 md:mt-0">
                   <h3 className="text-sm font-semibold leading-6 text-white">Soporte</h3>
                   <ul role="list" className="mt-6 space-y-4">
