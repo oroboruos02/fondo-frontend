@@ -23,8 +23,8 @@ const features = [
     icon: LockClosedIcon,
   },
   {
-    name: 'Inversión en Empresas de Software SAAS.',
-    description: 'Nos especializamos en invertir en empresas de software con modelos de facturación recurrente (SAAS), reconociendo el potencial de crecimiento y la estabilidad que ofrecen estas empresas. Apoyamos a estas compañías no solo con capital, sino también con asesoría estratégica para impulsar su desarrollo y expansión.',
+    name: 'Inversión en startups.',
+    description: 'Nos especializamos en invertir en startups, reconociendo el potencial de crecimiento y la estabilidad que ofrecen estas empresas. Apoyamos a estas compañías no solo con capital, sino también con asesoría estratégica para impulsar su desarrollo y expansión.',
     icon: ArrowPathIcon,
   },
   {
@@ -50,7 +50,7 @@ const tiers = [
     href: '#',
     imageUrl: '/14.png',
     priceMonthly: '',
-    description: "Capitum es un fondo de inversión líder, especializado en ofrecer soluciones financieras innovadoras y seguras para maximizar el valor del capital de nuestros socios. Nuestro enfoque se basa en un análisis exhaustivo y estrategias diversificadas que abarcan préstamos de capital, inversiones en acciones y empresas de software con modelos de facturación recurrente (SAAS). Con un equipo de expertos altamente capacitados.",
+    description: "Capitum es un fondo de inversión líder, especializado en ofrecer soluciones financieras innovadoras y seguras para maximizar el valor del capital de nuestros socios. Nuestro enfoque se basa en un análisis exhaustivo y estrategias diversificadas que abarcan préstamos de capital, inversiones en acciones e inversiones en startups. Con un equipo de expertos altamente capacitados.",
     features: [
 
     ],
@@ -62,7 +62,7 @@ const tiers = [
     href: '#',
     imageUrl: '/15.png',
     priceMonthly: '',
-    description: 'En Capitum, entendemos que cada inversión es un paso importante hacia el éxito financiero. Por ello, ofrecemos una gama de servicios diseñados para satisfacer las necesidades de nuestros socios, incluyendo préstamos de capital para empresas emergentes, inversiones estratégicas en acciones y apoyo a empresas de software SAAS. Nuestro compromiso con la transparencia y el asesoramiento personalizado nos distingue, brindando a nuestros inversores no solo oportunidades de crecimiento, sino también la confianza y el respaldo de un equipo dedicado a alcanzar sus objetivos financieros a largo plazo.',
+    description: 'En Capitum, entendemos que cada inversión es un paso importante hacia el éxito financiero. Por ello, ofrecemos una gama de servicios diseñados para satisfacer las necesidades de nuestros socios, incluyendo préstamos de capital para empresas emergentes, inversiones estratégicas en acciones y apoyo a startups. Nuestro compromiso con la transparencia y el asesoramiento personalizado nos distingue, brindando a nuestros inversores no solo oportunidades de crecimiento, sino también la confianza y el respaldo de un equipo dedicado a alcanzar sus objetivos financieros a largo plazo.',
     features: [
 
     ],
@@ -377,7 +377,7 @@ export default function Example() {
   </p>
 </div>
 <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600">
-En Capitum, nos especializamos en ofrecer oportunidades de inversión sólidas y rentables en tres áreas clave: préstamos de capital, inversiones en acciones, e inversiones en empresas de software con facturación recurrente (SAAS). Nuestro compromiso es lograr los objetivos financieros con estrategias de rendimientos a largo plazo.
+En Capitum, nos especializamos en ofrecer oportunidades de inversión sólidas y rentables en tres áreas clave: préstamos de capital, inversiones en acciones, e inversiones en startups. Nuestro compromiso es lograr los objetivos financieros con estrategias de rendimientos a largo plazo.
 </p>
 <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
   {tiers.map((tier, tierIdx) => (
