@@ -14,7 +14,7 @@ const navigation = [
 const features = [
   {
     name: 'Préstamo de Capital.',
-    description: 'Ofrecemos préstamos de capital con facilidad a nuestros socios, tambien a personas externas y empresas. Nuestro enfoque se centra en analizar minuciosamente cada oportunidad para garantizar que nuestros préstamos generen retornos consistentes y seguros.',
+    description: 'Ofrecemos préstamos de capital con facilidad a nuestros socios, tambien a personas externas y empresas. Nuestro enfoque se centra en analizar minuciosamente cada oportunidad para garantizar que nuestras inversiones generen retornos consistentes y seguros.',
     icon: CloudArrowUpIcon,
   },
   {
@@ -261,13 +261,11 @@ export default function Example() {
         <div className="mt-32 sm:mt-56">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl sm:text-center">
-              {/* <h2 className="text-base font-semibold leading-7 text-indigo-600">Everything you need</h2> */}
               <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">¿Quiénes Somos?</p>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-              Capitum es un fondo de inversión comprometido con la creación de valor financiero a largo plazo para nuestros socios.
-              Nuestra misión es ofrecer soluciones de inversión que se alineen con tus objetivos financieros, proporcionándote el
-              respaldo y la experiencia necesarios para maximizar tus rendimientos.
-
+                Capitum es un fondo de inversión comprometido con la creación de valor financiero a largo plazo para nuestros socios.
+                Nuestra misión es ofrecer soluciones de inversión que se alineen con tus objetivos financieros, proporcionándote el
+                respaldo y la experiencia necesarios para maximizar tus rendimientos.
               </p>
             </div>
           </div>
